@@ -37,6 +37,7 @@ export type TUser = {
   name: string;
 };
 
+//возможные режимы или состояния вкладок для переключения между различными категориями ингредиентов
 export type TTabMode = 'bun' | 'sauce' | 'main';
 
 // Определение типа состояния конструктора бургера
@@ -52,15 +53,9 @@ export type TConstructorState = {
 // Тип для булочки (TBun)
 export type TBun = TIngredient;
 
+//Тип для состояние ингредиентов
 export type TIngredientState = {
   buns: TIngredient[]; // Массив булочек
   mains: TIngredient[]; // Массив основных ингредиентов
   sauces: TIngredient[]; // Массив соусов
-};
-
-//Тип для состояния orders
-export type TOrdersState = {
-  orders: TOrder[];
-  total: number;
-  totalToday: number;
 };

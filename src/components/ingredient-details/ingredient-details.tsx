@@ -1,4 +1,4 @@
-//Старкит
+//Стартер
 
 // import { FC } from 'react';
 // import { Preloader } from '../ui/preloader';

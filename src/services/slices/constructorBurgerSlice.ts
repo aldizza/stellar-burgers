@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { TConstructorState, TBun, TConstructorIngredient } from '../../utils/types'; // Убедитесь, что пути правильные
 
