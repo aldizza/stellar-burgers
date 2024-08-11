@@ -22,31 +22,32 @@ import { RootState } from '../store';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
 
 type TIngredientState = {
-  ingredients: TIngredient[];// для хранения списка ингредиентов, загруженных с сервера
-  isLoading: boolean; //для отслеживания текущего процесса загрузки данных
-  hasError: boolean; //для отслеживания ошибок
+  ingredients: TIngredient[]; // для хранения списка ингредиентов, загруженных с сервера
+  isLoading: boolean; // для отслеживания текущего процесса загрузки данных
+  hasError: boolean; // для отслеживания ошибок
   constructorItems: {
     bun: TConstructorIngredient | null;
     ingredients: TConstructorIngredient[];
   };
   orderRequest: boolean;
   orderModalData: TConstructorIngredient | null;
+  currentIngredient: TIngredient | null; // добавлено для текущего ингредиента
 };
 
 const initialState: TIngredientState = {
   ingredients: [],
   isLoading: false,
-  hasError: false, //потому что в начале работы приложения или при инициализации запроса ошибки еще не произошло
+  hasError: false, // потому что в начале работы приложения или при инициализации запроса ошибки еще не произошло
   constructorItems: {
     bun: null,
     ingredients: [],
   },
   orderRequest: false,
   orderModalData: null,
+  currentIngredient: null, // инициализация текущего ингредиента
 };
 
 // Асинхронный Thunk для получения данных ингредиентов
-//функция отвечает за получение (fetch) данных об ингредиентах (через сетевой запрос)
 export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async () => {
@@ -58,7 +59,11 @@ export const fetchIngredients = createAsyncThunk(
 const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentIngredient: (state, action) => {
+      state.currentIngredient = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
@@ -76,8 +81,11 @@ const ingredientsSlice = createSlice({
   },
 });
 
+export const { setCurrentIngredient } = ingredientsSlice.actions;
+
 export const selectIngredients = (state: RootState) => state.ingredients.ingredients;
 export const selectIsLoading = (state: RootState) => state.ingredients.isLoading;
 export const selectHasError = (state: RootState) => state.ingredients.hasError;
+export const selectCurrentIngredient = (state: RootState) => state.ingredients.currentIngredient; // новый селектор
 
 export default ingredientsSlice.reducer;
