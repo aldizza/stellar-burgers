@@ -22,22 +22,22 @@ import { RootState } from '../store';
 import { TIngredient, TConstructorIngredient } from '@utils-types';
 
 type TIngredientState = {
-  ingredients: TIngredient[]; // для хранения списка ингредиентов, загруженных с сервера
-  isLoading: boolean; // для отслеживания текущего процесса загрузки данных
-  hasError: boolean; // для отслеживания ошибок
+  ingredients: TIngredient[]; // список ингредиентов
+  isLoading: boolean; // отслеживание процесса загрузки данных
+  hasError: boolean; // отслеживание ошибок
   constructorItems: {
     bun: TConstructorIngredient | null;
     ingredients: TConstructorIngredient[];
   };
   orderRequest: boolean;
   orderModalData: TConstructorIngredient | null;
-  currentIngredient: TIngredient | null; // добавлено для текущего ингредиента
+  currentIngredient: TIngredient | null; // текущий выбранный ингредиент
 };
 
 const initialState: TIngredientState = {
   ingredients: [],
   isLoading: false,
-  hasError: false, // потому что в начале работы приложения или при инициализации запроса ошибки еще не произошло
+  hasError: false, // инициализация ошибки как false
   constructorItems: {
     bun: null,
     ingredients: [],
@@ -52,7 +52,7 @@ export const fetchIngredients = createAsyncThunk(
   'ingredients/fetchIngredients',
   async () => {
     const response = await getIngredientsApi();
-    return response;
+    return response; // возвращаем данные ингредиентов
   }
 );
 
@@ -61,31 +61,35 @@ const ingredientsSlice = createSlice({
   initialState,
   reducers: {
     setCurrentIngredient: (state, action) => {
-      state.currentIngredient = action.payload;
+      state.currentIngredient = action.payload; // установка текущего ингредиента
     }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
-        state.isLoading = true;
-        state.hasError = false;
+        state.isLoading = true; // включаем лоадер
+        state.hasError = false; // сбрасываем ошибку при новом запросе
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.ingredients = action.payload;
+        state.isLoading = false; // отключаем лоадер
+        state.ingredients = action.payload; // сохраняем полученные ингредиенты
       })
       .addCase(fetchIngredients.rejected, (state) => {
-        state.isLoading = false;
-        state.hasError = true;
+        state.isLoading = false; // отключаем лоадер
+        state.hasError = true; // включаем флаг ошибки
       });
   },
 });
 
+// Экшены
 export const { setCurrentIngredient } = ingredientsSlice.actions;
 
+// Селекторы
 export const selectIngredients = (state: RootState) => state.ingredients.ingredients;
 export const selectIsLoading = (state: RootState) => state.ingredients.isLoading;
 export const selectHasError = (state: RootState) => state.ingredients.hasError;
-export const selectCurrentIngredient = (state: RootState) => state.ingredients.currentIngredient; // новый селектор
+export const selectCurrentIngredient = (state: RootState) => state.ingredients.currentIngredient; // селектор для текущего ингредиента
 
+// Экспортируем редюсер
 export default ingredientsSlice.reducer;
+

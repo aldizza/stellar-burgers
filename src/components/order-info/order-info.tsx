@@ -1,6 +1,6 @@
-//Стартер Практикум
+//Стартер
 
-// import { FC, useMemo } from 'react';
+//import { FC, useMemo } from 'react';
 // import { Preloader } from '../ui/preloader';
 // import { OrderInfoUI } from '../ui/order-info';
 // import { TIngredient } from '@utils-types';
@@ -68,19 +68,30 @@
 //   return <OrderInfoUI orderInfo={orderInfo} />;
 // };
 
-import { FC, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store';
+import { FC, useMemo, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../../services/store';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { fetchOrderData } from '../../services/slices/ordersSlice'; // Импортируем Thunk-функцию
 
 export const OrderInfo: FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+
   // Получаем данные заказа и ингредиенты из состояния Redux
   const orderData = useSelector((state: RootState) => state.orders.orderData);
   const ingredients: TIngredient[] = useSelector(
     (state: RootState) => state.ingredients.ingredients
   );
+  const isLoading = useSelector((state: RootState) => state.orders.isLoading);
+  const hasError = useSelector((state: RootState) => state.orders.hasError);
+
+  useEffect(() => {
+    // Вызов Thunk-функции для получения данных заказа
+    const orderNumber = 12345; // Передайте реальный номер заказа
+    dispatch(fetchOrderData(orderNumber));
+  }, [dispatch]);
 
   // Подготавливаем данные для отображения
   const orderInfo = useMemo(() => {
@@ -123,6 +134,14 @@ export const OrderInfo: FC = () => {
       total
     };
   }, [orderData, ingredients]);
+
+  if (isLoading) {
+    return <Preloader />;
+  }
+
+  if (hasError) {
+    return <div>Ошибка при загрузке данных заказа</div>;
+  }
 
   if (!orderInfo) {
     return <Preloader />;

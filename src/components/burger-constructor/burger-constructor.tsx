@@ -74,11 +74,11 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     if (!bun || orderRequest) return;
-    // Логика для обработки клика на заказ
+    // дописать логику для обработки клика на заказ!!!!!!!!!!!!!!!
   };
 
   const closeOrderModal = () => {
-    // Логика для закрытия модального окна заказа
+    // дописать логику для закрытия модального окна заказа!!!!!!!!!!!!!!
   };
 
   const price = useMemo(

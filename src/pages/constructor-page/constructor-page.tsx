@@ -43,10 +43,11 @@ import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 
 export const ConstructorPage: FC = () => {
+  const isIngredientsLoading = false;
   // Получаем состояние загрузки ингредиентов из Redux
-  const isIngredientsLoading = useSelector(
-    (state: RootState) => state.ingredients.isLoading
-  );
+  // const isIngredientsLoading = useSelector(
+  //   (state: RootState) => state.ingredients.isLoading
+  // );
 
   return (
     <>
