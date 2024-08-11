@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+
 // import { ConstructorPage } from '@pages';
 // import '../../index.css';
 // import styles from './app.module.css';
@@ -40,7 +43,7 @@ import { Route, Routes, BrowserRouter, useLocation, useNavigate } from 'react-ro
 import { FC, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { getIngredients } from '../../services/ingridientsSlice';
+import { fetchIngredients } from '../../services/slices/ingridientsSlice';
 
 import { AppDispatch } from '../../services/store'
 
@@ -56,7 +59,7 @@ const App = () => {
 const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getIngredients());
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   return (
@@ -151,6 +154,3 @@ const dispatch: AppDispatch = useDispatch();
 };
 
 export default App;
-
-
-проверка
