@@ -19,18 +19,30 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../../utils/burger-api';
 import { RootState } from '../store';
-import { TIngredient } from '@utils-types';
+import { TIngredient, TConstructorIngredient } from '@utils-types';
 
 type TIngredientState = {
   ingredients: TIngredient[];// для хранения списка ингредиентов, загруженных с сервера
   isLoading: boolean; //для отслеживания текущего процесса загрузки данных
   hasError: boolean; //для отслеживания ошибок
+  constructorItems: {
+    bun: TConstructorIngredient | null;
+    ingredients: TConstructorIngredient[];
+  };
+  orderRequest: boolean;
+  orderModalData: TConstructorIngredient | null;
 };
 
 const initialState: TIngredientState = {
   ingredients: [],
   isLoading: false,
   hasError: false, //потому что в начале работы приложения или при инициализации запроса ошибки еще не произошло
+  constructorItems: {
+    bun: null,
+    ingredients: [],
+  },
+  orderRequest: false,
+  orderModalData: null,
 };
 
 // Асинхронный Thunk для получения данных ингредиентов

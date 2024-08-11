@@ -39,7 +39,7 @@ import {
 } from 'react-redux';
 
 import ingredientsReducer from './slices/ingridientsSlice';
-// import constructorSliceReducer from './slices/constructorBurgerSlice';
+import burgerConstructorReducer from './slices/constructorBurgerSlice';
 // import userSliceReducer from './slices/userSlice';
 // import feedsSliceReducer from './slices/feedsSlice';
 // import ordersSliceReducer from './slices/ordersSlice';
@@ -48,7 +48,7 @@ export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   // user: userReducer, 
   // feeds: feedsReducer,
-  // burgerConstructor: constructorReducer,
+  burgerConstructor: burgerConstructorReducer,
   // orders: ordersReducer
 });
 
