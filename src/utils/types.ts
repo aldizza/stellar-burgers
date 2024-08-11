@@ -57,3 +57,10 @@ export type TIngredientState = {
   mains: TIngredient[]; // Массив основных ингредиентов
   sauces: TIngredient[]; // Массив соусов
 };
+
+//Тип для состояния orders
+export type TOrdersState = {
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+};

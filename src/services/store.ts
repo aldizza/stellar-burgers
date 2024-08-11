@@ -42,14 +42,14 @@ import ingredientsReducer from './slices/ingridientsSlice';
 import burgerConstructorReducer from './slices/constructorBurgerSlice';
 // import userSliceReducer from './slices/userSlice';
 // import feedsSliceReducer from './slices/feedsSlice';
-// import ordersSliceReducer from './slices/ordersSlice';
+import ordersSliceReducer from './slices/ordersSlice';
 
 export const rootReducer = combineReducers({
   ingredients: ingredientsReducer,
   // user: userReducer, 
   // feeds: feedsReducer,
   burgerConstructor: burgerConstructorReducer,
-  // orders: ordersReducer
+  orders: ordersSliceReducer
 });
 
 export const store = configureStore({
