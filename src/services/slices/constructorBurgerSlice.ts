@@ -1,49 +1,83 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TConstructorState, TBun, TConstructorIngredient } from '../../utils/types'; // Убедитесь, что пути правильные
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  TConstructorState,
+  TConstructorIngredient,
+  TIngredient,
+  TBun
+} from '../../utils/types';
+import { getIngredientsApi } from '../../utils/burger-api';
 
+// Начальное состояние
 const initialState: TConstructorState = {
   bun: null,
   ingredients: [],
   isLoading: false,
   hasError: false,
   orderRequest: false,
-  orderModalData: null, 
+  orderModalData: null
 };
+
+// Асинхронная Thunk-функция для получения ингредиентов
+export const fetchIngredients = createAsyncThunk(
+  'constructor/fetchIngredients',
+  async (): Promise<TConstructorIngredient[]> => {
+    const ingredients = await getIngredientsApi();
+    return ingredients.map((ingredient: TIngredient) => ({
+      ...ingredient,
+      id: ingredient._id // Преобразуем _id в id
+    }));
+  }
+);
 
 const constructorBurgerSlice = createSlice({
   name: 'constructor',
   initialState,
   reducers: {
-    // Действие для установки булочки
-    setBun: (state, action: PayloadAction<TBun | null>) => {
-      state.bun = action.payload ? { ...action.payload } : null;
+    setBun: (state, action: PayloadAction<TConstructorIngredient | null>) => {
+      state.bun = action.payload; // Устанавливаем булочку
     },
-    // Действие для добавления ингредиента
     addIngredient: (state, action: PayloadAction<TConstructorIngredient>) => {
       state.ingredients.push(action.payload);
     },
-    // Действие для удаления ингредиента по его индексу
     removeIngredient: (state, action: PayloadAction<number>) => {
-      state.ingredients = state.ingredients.filter((_, index) => index !== action.payload);
+      state.ingredients = state.ingredients.filter(
+        (_, index) => index !== action.payload
+      );
     },
-    // Действие для перетаскивания ингредиента (например, изменения его позиции)
-    moveIngredient: (state, action: PayloadAction<{ from: number; to: number }>) => {
+    moveIngredient: (
+      state,
+      action: PayloadAction<{ from: number; to: number }>
+    ) => {
       const { from, to } = action.payload;
       const [movedIngredient] = state.ingredients.splice(from, 1);
       state.ingredients.splice(to, 0, movedIngredient);
     },
-    // Действие для установки состояния загрузки
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
-    // Действие для установки состояния ошибки
     setError: (state, action: PayloadAction<boolean>) => {
       state.hasError = action.payload;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchIngredients.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        fetchIngredients.fulfilled,
+        (state, action: PayloadAction<TConstructorIngredient[]>) => {
+          state.ingredients = action.payload; // Устанавливаем полученные ингредиенты
+          state.isLoading = false;
+        }
+      )
+      .addCase(fetchIngredients.rejected, (state) => {
+        state.isLoading = false;
+        state.hasError = true;
+      });
   }
 });
 
-// Экспортируем действия
 export const {
   setBun,
   addIngredient,
@@ -53,5 +87,4 @@ export const {
   setError
 } = constructorBurgerSlice.actions;
 
-// Экспортируем редьюсер по умолчанию
 export default constructorBurgerSlice.reducer;

@@ -49,24 +49,36 @@
 // };
 
 
-import { FC, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, useMemo, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
-import { RootState } from '../../services/store';
+import { RootState, AppDispatch } from '../../services/store';
+import { fetchIngredients } from '../../services/slices/constructorBurgerSlice';
 
 export const BurgerConstructor: FC = () => {
+  const dispatch: AppDispatch = useDispatch();
+  
   // Получение данных из стора
   const bun = useSelector((state: RootState) => state.burgerConstructor.bun);
   const ingredients = useSelector((state: RootState) => state.burgerConstructor.ingredients);
   const orderRequest = useSelector((state: RootState) => state.burgerConstructor.orderRequest);
   const orderModalData = useSelector((state: RootState) => state.burgerConstructor.orderModalData);
+  const isLoading = useSelector((state: RootState) => state.burgerConstructor.isLoading);
+  const hasError = useSelector((state: RootState) => state.burgerConstructor.hasError);
+
+  useEffect(() => {
+    // Запуск Thunk-функции для получения ингредиентов
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   const onOrderClick = () => {
     if (!bun || orderRequest) return;
+    // Логика для обработки клика на заказ
   };
 
   const closeOrderModal = () => {
+    // Логика для закрытия модального окна заказа
   };
 
   const price = useMemo(
@@ -79,15 +91,22 @@ export const BurgerConstructor: FC = () => {
     [bun, ingredients]
   );
 
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (hasError) {
+    return <div>Ошибка загрузки ингредиентов</div>;
+  }
+
   return (
     <BurgerConstructorUI
       price={price}
       orderRequest={orderRequest}
-      constructorItems={{ bun, ingredients }} // Передаем как объект, если нужно
+      constructorItems={{ bun, ingredients }}
       orderModalData={orderModalData}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}
     />
   );
 };
-
