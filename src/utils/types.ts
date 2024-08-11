@@ -39,12 +39,21 @@ export type TUser = {
 
 export type TTabMode = 'bun' | 'sauce' | 'main';
 
+// Определение типа состояния конструктора бургера
+export type TConstructorState = {
+  bun: TBun | null;
+  ingredients: TConstructorIngredient[];
+  isLoading: boolean;
+  hasError: boolean;
+  orderRequest: boolean;
+  orderModalData: TOrder | null;
+};
 
+// Тип для булочки (TBun)
+export type TBun = TIngredient;
 
-//уточни
-export enum RequestStatus {
-  Idle = 'Idle',
-  Loading = 'Loading',
-  Success = 'Success',
-  Failed = 'Failed'
-}
+export type TIngredientState = {
+  buns: TIngredient[]; // Массив булочек
+  mains: TIngredient[]; // Массив основных ингредиентов
+  sauces: TIngredient[]; // Массив соусов
+};
