@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 // Для создания файла ingredientsSlice.ts и интеграции его с Redux и API запросами, выполните следующие шаги:
 
 // Создаем слайс с использованием createSlice:
@@ -14,7 +12,6 @@
 // 8) Добавить редюсер ингредиентов в rootReducer.
 
 //слайс для ингридиентов
-
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getIngredientsApi } from '../../utils/burger-api';
@@ -40,11 +37,11 @@ const initialState: TIngredientState = {
   hasError: false, // инициализация ошибки как false
   constructorItems: {
     bun: null,
-    ingredients: [],
+    ingredients: []
   },
   orderRequest: false,
   orderModalData: null,
-  currentIngredient: null, // инициализация текущего ингредиента
+  currentIngredient: null // инициализация текущего ингредиента
 };
 
 // Асинхронный Thunk для получения данных ингредиентов
@@ -78,18 +75,20 @@ const ingredientsSlice = createSlice({
         state.isLoading = false; // отключаем лоадер
         state.hasError = true; // включаем флаг ошибки
       });
-  },
+  }
 });
 
 // Экшены
 export const { setCurrentIngredient } = ingredientsSlice.actions;
 
 // Селекторы
-export const selectIngredients = (state: RootState) => state.ingredients.ingredients;
-export const selectIsLoading = (state: RootState) => state.ingredients.isLoading;
+export const selectIngredients = (state: RootState) =>
+  state.ingredients.ingredients;
+export const selectIsLoading = (state: RootState) =>
+  state.ingredients.isLoading;
 export const selectHasError = (state: RootState) => state.ingredients.hasError;
-export const selectCurrentIngredient = (state: RootState) => state.ingredients.currentIngredient; // селектор для текущего ингредиента
+export const selectCurrentIngredient = (state: RootState) =>
+  state.ingredients.currentIngredient; // селектор для текущего ингредиента
 
 // Экспортируем редюсер
 export default ingredientsSlice.reducer;
-

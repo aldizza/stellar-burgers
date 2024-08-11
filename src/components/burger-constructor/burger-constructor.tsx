@@ -1,6 +1,4 @@
-/* eslint-disable */
-
-// Я.Практикум
+// стартер Я.Практикум
 
 // import { FC, useMemo } from 'react';
 // import { TConstructorIngredient } from '@utils-types';
@@ -48,37 +46,47 @@
 //   );
 // };
 
-
-import { FC, useMemo, useEffect } from 'react';
+import { FC, useMemo, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { RootState, AppDispatch } from '../../services/store';
 import { fetchIngredients } from '../../services/slices/constructorBurgerSlice';
+import { Modal } from '../modal/modal'; // Импортируем компонент Modal
 
 export const BurgerConstructor: FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  
+  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние для модального окна
+
   // Получение данных из стора
   const bun = useSelector((state: RootState) => state.burgerConstructor.bun);
-  const ingredients = useSelector((state: RootState) => state.burgerConstructor.ingredients);
-  const orderRequest = useSelector((state: RootState) => state.burgerConstructor.orderRequest);
-  const orderModalData = useSelector((state: RootState) => state.burgerConstructor.orderModalData);
-  const isLoading = useSelector((state: RootState) => state.burgerConstructor.isLoading);
-  const hasError = useSelector((state: RootState) => state.burgerConstructor.hasError);
+  const ingredients = useSelector(
+    (state: RootState) => state.burgerConstructor.ingredients
+  );
+  const orderRequest = useSelector(
+    (state: RootState) => state.burgerConstructor.orderRequest
+  );
+  const orderModalData = useSelector(
+    (state: RootState) => state.burgerConstructor.orderModalData
+  );
+  const isLoading = useSelector(
+    (state: RootState) => state.burgerConstructor.isLoading
+  );
+  const hasError = useSelector(
+    (state: RootState) => state.burgerConstructor.hasError
+  );
 
   useEffect(() => {
-    // Запуск Thunk-функции для получения ингредиентов
     dispatch(fetchIngredients());
   }, [dispatch]);
 
   const onOrderClick = () => {
     if (!bun || orderRequest) return;
-    // дописать логику для обработки клика на заказ!!!!!!!!!!!!!!!
+    setIsModalOpen(true); // Открываем модальное окно
   };
 
   const closeOrderModal = () => {
-    // дописать логику для закрытия модального окна заказа!!!!!!!!!!!!!!
+    setIsModalOpen(false); // Закрываем модальное окно
   };
 
   const price = useMemo(
@@ -100,13 +108,24 @@ export const BurgerConstructor: FC = () => {
   }
 
   return (
-    <BurgerConstructorUI
-      price={price}
-      orderRequest={orderRequest}
-      constructorItems={{ bun, ingredients }}
-      orderModalData={orderModalData}
-      onOrderClick={onOrderClick}
-      closeOrderModal={closeOrderModal}
-    />
+    <>
+      <BurgerConstructorUI
+        price={price}
+        orderRequest={orderRequest}
+        constructorItems={{ bun, ingredients }} // Передаем данные конструкторов
+        orderModalData={orderModalData}
+        onOrderClick={onOrderClick}
+        closeOrderModal={closeOrderModal}
+      />
+      {isModalOpen && (
+        <Modal title='Ваш заказ' onClose={closeOrderModal}>
+          {/* Содержимое модального окна */}
+          <p>
+            Ваш заказ: {bun && bun.name} и{' '}
+            {ingredients.map((ing) => ing.name).join(', ')}
+          </p>
+        </Modal>
+      )}
+    </>
   );
 };

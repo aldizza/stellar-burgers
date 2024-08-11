@@ -1,6 +1,4 @@
-/* eslint-disable */
-
-// Заготовка Практикума
+// стартер Практикум
 
 // import { configureStore } from '@reduxjs/toolkit';
 
@@ -25,8 +23,6 @@
 // export const useSelector: TypedUseSelectorHook<RootState> = selectorHook;
 
 // export default store;
-
-
 
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
@@ -62,4 +58,3 @@ export const useDispatch: () => AppDispatch = () => dispatchHook();
 export const useSelector: TypedUseSelectorHook<RootState> = selectorHook;
 
 export default store;
-
