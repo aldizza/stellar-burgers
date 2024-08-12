@@ -108,68 +108,19 @@ export const fetchIngredientById = createAsyncThunk(
   }
 );
 
+//Посмотреть в вебинаре, Максим сказал, что там есть
 type TIngredientState = {
   ingredients: TIngredient[]; // список ингредиентов
   isLoading: boolean; // отслеживание процесса загрузки данных
-  hasError: boolean; // отслеживание ошибок
-  constructorItems: {
-    bun: TConstructorIngredient;
-    ingredients: TConstructorIngredient[];
-  };
-  orderRequest: boolean;
-  orderModalData: TConstructorIngredient;
-  currentIngredient: TIngredient;
+  hasError: boolean;
+  currentIngredient: TIngredient | null;
 };
 
 const initialState: TIngredientState = {
   ingredients: [],
   isLoading: false,
   hasError: false,
-  constructorItems: {
-    bun: {
-      _id: '',
-      name: '',
-      type: '',
-      proteins: 0,
-      fat: 0,
-      carbohydrates: 0,
-      calories: 0,
-      price: 0,
-      image: '',
-      image_large: '',
-      image_mobile: '',
-      id: ''
-    },
-    ingredients: []
-  },
-  orderRequest: false,
-  orderModalData: {
-    _id: '',
-    name: '',
-    type: '',
-    proteins: 0,
-    fat: 0,
-    carbohydrates: 0,
-    calories: 0,
-    price: 0,
-    image: '',
-    image_large: '',
-    image_mobile: '',
-    id: ''
-  },
-  currentIngredient: {
-    _id: '',
-    name: '',
-    type: '',
-    proteins: 0,
-    fat: 0,
-    carbohydrates: 0,
-    calories: 0,
-    price: 0,
-    image: '',
-    image_large: '',
-    image_mobile: ''
-  }
+  currentIngredient: null
 };
 
 // Асинхронный Thunk для получения данных ингредиентов
@@ -185,15 +136,17 @@ const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
   reducers: {
-    setCurrentIngredient: (state, action) => {
-      state.currentIngredient = action.payload; // установка текущего ингредиента
-    }
+    //Максим удалил
+    // setCurrentIngredient: (state, action) => {
+    //   state.currentIngredient = action.payload; // установка текущего ингредиента
+    // }
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredients.pending, (state) => {
         state.isLoading = true; // включаем лоадер
-        state.hasError = false; // сбрасываем ошибку при новом запросе
+        //Максим удалил 10.46
+        // state.hasError = false; // сбрасываем ошибку при новом запросе
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.isLoading = false; // отключаем лоадер
@@ -207,7 +160,8 @@ const ingredientsSlice = createSlice({
 });
 
 // Экшены
-export const { setCurrentIngredient } = ingredientsSlice.actions;
+//Максим удалил
+// export const { setCurrentIngredient } = ingredientsSlice.actions;
 
 // Селекторы
 export const selectIngredients = (state: RootState) =>
@@ -216,7 +170,7 @@ export const selectIsLoading = (state: RootState) =>
   state.ingredients.isLoading;
 export const selectHasError = (state: RootState) => state.ingredients.hasError;
 export const selectCurrentIngredient = (state: RootState) =>
-  state.ingredients.currentIngredient; // селектор для текущего ингредиента
+  state.ingredients.currentIngredient;
 
 // Экспортируем редюсер
 export default ingredientsSlice.reducer;

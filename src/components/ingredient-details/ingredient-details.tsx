@@ -36,43 +36,26 @@
 //   return <IngredientDetailsUI ingredientData={ingredientData} />;
 // };
 
-// ingredient-details.tsx
+// Не трогать (как у Максима минута 10.20)
 
 import { FC, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { RootState, AppDispatch } from '../../services/store';
-import { fetchIngredientById } from '../../services/slices/ingridientsSlice';
+import {
+  fetchIngredientById,
+  selectIngredients
+} from '../../services/slices/ingridientsSlice';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
+import { TIngredient } from '../../utils/types';
 
 export const IngredientDetails: FC = () => {
   const { id } = useParams<{ id: string }>();
-  const dispatch: AppDispatch = useDispatch();
 
-  const ingredientData = useSelector(
-    (state: RootState) => state.ingredients.currentIngredient
+  const ingredientData = useSelector(selectIngredients).find(
+    (item) => item._id == id
   );
-  const isLoading = useSelector(
-    (state: RootState) => state.ingredients.isLoading
-  );
-  const hasError = useSelector(
-    (state: RootState) => state.ingredients.hasError
-  );
-
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchIngredientById(id));
-    }
-  }, [dispatch, id]);
-
-  if (isLoading) {
-    return <Preloader />;
-  }
-
-  if (hasError) {
-    return <div>Ошибка загрузки ингредиента</div>;
-  }
 
   if (!ingredientData) {
     return <Preloader />;
