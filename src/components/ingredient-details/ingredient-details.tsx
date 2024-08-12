@@ -17,17 +17,62 @@
 
 //Для того чтобы использовать данные ингредиента из состояния Redux в вашем компоненте IngredientDetails, вам нужно подключить компонент к Redux store и использовать хук useSelector для получения данных из состояния.
 
-import { FC } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store'; // Убедитесь, что путь правильный
+// import { FC } from 'react';
+// import { useSelector } from 'react-redux';
+// import { RootState } from '../../services/store'; // Убедитесь, что путь правильный
+// import { Preloader } from '../ui/preloader';
+// import { IngredientDetailsUI } from '../ui/ingredient-details';
+
+// export const IngredientDetails: FC = () => {
+//   // Получаем данные ингредиента из Redux store
+//   const ingredientData = useSelector(
+//     (state: RootState) => state.ingredients.currentIngredient
+//   );
+
+//   if (!ingredientData) {
+//     return <Preloader />;
+//   }
+
+//   return <IngredientDetailsUI ingredientData={ingredientData} />;
+// };
+
+// ingredient-details.tsx
+
+import { FC, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { RootState, AppDispatch } from '../../services/store';
+import { fetchIngredientById } from '../../services/slices/ingridientsSlice';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
 
 export const IngredientDetails: FC = () => {
-  // Получаем данные ингредиента из Redux store
+  const { id } = useParams<{ id: string }>();
+  const dispatch: AppDispatch = useDispatch();
+
   const ingredientData = useSelector(
     (state: RootState) => state.ingredients.currentIngredient
   );
+  const isLoading = useSelector(
+    (state: RootState) => state.ingredients.isLoading
+  );
+  const hasError = useSelector(
+    (state: RootState) => state.ingredients.hasError
+  );
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchIngredientById(id));
+    }
+  }, [dispatch, id]);
+
+  if (isLoading) {
+    return <Preloader />;
+  }
+
+  if (hasError) {
+    return <div>Ошибка загрузки ингредиента</div>;
+  }
 
   if (!ingredientData) {
     return <Preloader />;
