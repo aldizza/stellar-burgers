@@ -47,7 +47,6 @@
 // };
 
 //Полностью сделано
-//Можно потом переделать onOrderClick
 
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient, RequestStatus } from '@utils-types';
