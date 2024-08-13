@@ -1,48 +1,71 @@
+//Нужно уточнить у наставника насчет типизации feedstate
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getFeedsApi } from '../../utils/burger-api'; // Импортируем функцию из burger-api
+import { getFeedsApi } from '../../utils/burger-api';
+import { RequestStatus, TOrdersData } from '../../utils/types';
 import { TOrder } from '@utils-types';
 
-type TFeedState = {
+interface IFeedState {
   orders: TOrder[];
-  total: number;
-  totalToday: number;
-  isLoading: boolean;
-  hasError: boolean;
-};
+  status: RequestStatus;
+  data: TOrdersData;
+}
 
-const initialState: TFeedState = {
+export const initialState: IFeedState = {
   orders: [],
-  total: 0,
-  totalToday: 0,
-  isLoading: false,
-  hasError: false
+  status: RequestStatus.Idle,
+  data: {
+    orders: [],
+    total: 0,
+    totalToday: 0
+  }
 };
 
 // Создаем асинхронный thunk для получения заказов
-export const fetchOrders = createAsyncThunk('feed/fetchOrders', async () => {
-  const response = await getFeedsApi();
-  return response.orders; // Возвращаем массив заказов
-});
+export const getFeeds = createAsyncThunk<TOrdersData>(
+  'order/feed',
+  async (_, { dispatch }) => {
+    dispatch(clearFeed());
+    return await getFeedsApi();
+  }
+);
 
-const feedSlice = createSlice({
+export const feedSlice = createSlice({
   name: 'feed',
   initialState,
-  reducers: {},
+  reducers: {
+    clearFeed: () => initialState
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrders.pending, (state) => {
-        state.isLoading = true;
-        state.hasError = false;
+      .addCase(getFeeds.pending, (state) => {
+        state.status = RequestStatus.Loading;
       })
-      .addCase(fetchOrders.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.orders = action.payload;
+      .addCase(getFeeds.fulfilled, (state, action) => {
+        state.status = RequestStatus.Success;
+        state.orders = action.payload.orders;
+        state.data.total = action.payload.total;
+        state.data.totalToday = action.payload.totalToday;
       })
-      .addCase(fetchOrders.rejected, (state) => {
-        state.isLoading = false;
-        state.hasError = true;
+      .addCase(getFeeds.rejected, (state) => {
+        state.status = RequestStatus.Failed;
       });
+  },
+  selectors: {
+    selectFeedOrders: (state) => state.orders,
+    selectTotal: (state) => state.data.total,
+    selectTotalToday: (state) => state.data.totalToday,
+    selectFeedStatus: (state) => state.status,
+    selectFeed: (state) => state
   }
 });
 
-export default feedSlice.reducer;
+export const { clearFeed } = feedSlice.actions;
+export const {
+  selectFeedOrders,
+  selectTotal,
+  selectTotalToday,
+  selectFeedStatus,
+  selectFeed
+} = feedSlice.selectors;
+export const feedReducer = feedSlice.reducer;

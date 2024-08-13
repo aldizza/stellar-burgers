@@ -24,6 +24,7 @@
 
 // export default store;
 
+//Все сделано хорошо, править не надо
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import {
   TypedUseSelectorHook,
@@ -31,26 +32,28 @@ import {
   useSelector as selectorHook
 } from 'react-redux';
 
-import ingredientsReducer from './slices/ingridientsSlice';
-import burgerConstructorReducer from './slices/constructorBurgerSlice';
-import feedReducer from './slices/feedSlice';
-import ordersSliceReducer from './slices/ordersSlice';
-import userReducer from './slices/userSlice';
+import { burgerConstructorSlice } from '../services/slices/burgerConstructorSlice';
+import { feedSlice } from '../services/slices/feedSlice';
+import { orderSlice } from '../services/slices/orderSlise';
+import { ingredientsSlice } from '../services/slices/ingridientsSlice';
+import { ordersSlice } from '../services/slices/ordersSlice';
+import { userSlice } from '../services/slices/userSlice';
 
-export const rootReducer = combineReducers({
-  ingredients: ingredientsReducer,
-  feeds: feedReducer,
-  burgerConstructor: burgerConstructorReducer,
-  orders: ordersSliceReducer,
-  user: userReducer
-});
+const rootReducer = {
+  [ingredientsSlice.name]: ingredientsSlice.reducer,
+  [burgerConstructorSlice.name]: burgerConstructorSlice.reducer,
+  [feedSlice.name]: feedSlice.reducer,
+  [orderSlice.name]: orderSlice.reducer,
+  [ordersSlice.name]: ordersSlice.reducer,
+  [userSlice.name]: userSlice.reducer
+};
 
 export const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production'
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof store.getState>;
 
 export type AppDispatch = typeof store.dispatch;
 

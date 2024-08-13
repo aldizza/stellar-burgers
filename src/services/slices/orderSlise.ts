@@ -3,10 +3,11 @@
 //страницу заказа по прямому урлу, тогда будет диспатчится событие на получение заказа по его номеру
 // и устанавливаться в стор
 
+//Полностью готов, ничего править не нужно
 
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { getOrderByNumberApi } from '../../utils/burger-api';
-import { RequestStatus, TOrder } from '../../utils/types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { TOrder, RequestStatus } from '../../utils/types';
 
 interface TOrderState {
   info: TOrder | null;
@@ -14,40 +15,41 @@ interface TOrderState {
 }
 
 export const initialState: TOrderState = {
-    info: null,
-    status: 'Idle'
-  };
+  info: null,
+  status: RequestStatus.Idle
+};
 
 export const getOrderByNumber = createAsyncThunk<TOrder, number>(
   'order/getOrderByNumber',
   async (number: number) => {
     const response = await getOrderByNumberApi(number);
     return response.orders[0];
-}
+  }
 );
 
 export const orderSlice = createSlice({
-    name: 'order',
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-      builder
-        .addCase(getOrderByNumber.pending, (state) => {
-          state.status = 'Loading'; // Установка статуса загрузки
-        })
-        .addCase(getOrderByNumber.fulfilled, (state, action: PayloadAction<TOrder>) => {
-          state.status = 'Success'; // Установка статуса успешного завершения
-          state.info = action.payload; // Обновление данных заказа
-        })
-        .addCase(getOrderByNumber.rejected, (state) => {
-          state.status = 'Failed'; // Установка статуса ошибки
-        });
-    }
-  });
+  name: 'order',
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(getOrderByNumber.pending, (state) => {
+        state.status = RequestStatus.Loading;
+      })
+      .addCase(getOrderByNumber.fulfilled, (state, action) => {
+        state.status = RequestStatus.Success;
+        state.info = action.payload;
+      })
+      .addCase(getOrderByNumber.rejected, (state) => {
+        state.status = RequestStatus.Failed;
+      });
+  },
+  selectors: {
+    selectorOrderData: (state: TOrderState) => state.info,
+    selectorOrderStatus: (state: TOrderState) => state.status
+  }
+});
 
-// Селекторы определены вне слайса, так как createSlice не поддерживает ключ selectors.
-export const selectOrderData = (state: { order: TOrderState }) => state.order.info;
-export const selectOrderStatus = (state: { order: TOrderState }) => state.order.status;
 export const selectorIngredients = orderSlice.selectors;
-
-export default orderSlice.reducer;
+export const { selectorOrderData, selectorOrderStatus } = orderSlice.selectors;
+export const orderReducer = orderSlice.reducer;

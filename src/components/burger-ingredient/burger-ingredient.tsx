@@ -22,29 +22,6 @@
 //   }
 // );
 
-//Промежуточный вариант
-// import { FC } from 'react';
-// import { useLocation } from 'react-router-dom';
-// import { BurgerIngredientUI } from '@ui';
-// import { TBurgerIngredientProps } from './type';
-
-// export const BurgerIngredient: FC<TBurgerIngredientProps> = ({ ingredient, count }) => {
-//   const location = useLocation(); // Получаем текущую локацию
-
-//   const handleAdd = () => {
-//     // Добавить код для обработки добавления ингредиента
-//   };
-
-//   return (
-//     <BurgerIngredientUI
-//       ingredient={ingredient}
-//       count={count}
-//       locationState={{ background: location }} // Передаем `locationState` как ожидается
-//       handleAdd={handleAdd}
-//     />
-//   );
-// };
-
 import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BurgerIngredientUI } from '@ui';

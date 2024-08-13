@@ -13,164 +13,49 @@
 
 //слайс для ингридиентов
 
-// import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import { getIngredientsApi } from '../../utils/burger-api';
-// import { RootState } from '../store';
-// import { TIngredient, TConstructorIngredient } from '@utils-types';
-
-// type TIngredientState = {
-//   ingredients: TIngredient[]; // список ингредиентов
-//   isLoading: boolean; // отслеживание процесса загрузки данных
-//   hasError: boolean; // отслеживание ошибок
-//   constructorItems: {
-//     bun: TConstructorIngredient | null;
-//     ingredients: TConstructorIngredient[];
-//   };
-//   orderRequest: boolean;
-//   orderModalData: TConstructorIngredient | null;
-//   currentIngredient: TIngredient | null; // текущий выбранный ингредиент
-// };
-
-// const initialState: TIngredientState = {
-//   ingredients: [],
-//   isLoading: false,
-//   hasError: false, // инициализация ошибки как false
-//   constructorItems: {
-//     bun: null,
-//     ingredients: []
-//   },
-//   orderRequest: false,
-//   orderModalData: null,
-//   currentIngredient: null // инициализация текущего ингредиента
-// };
-
-// // Асинхронный Thunk для получения данных ингредиентов
-// export const fetchIngredients = createAsyncThunk(
-//   'ingredients/fetchIngredients',
-//   async () => {
-//     const response = await getIngredientsApi();
-//     return response; // возвращаем данные ингредиентов
-//   }
-// );
-
-// const ingredientsSlice = createSlice({
-//   name: 'ingredients',
-//   initialState,
-//   reducers: {
-//     setCurrentIngredient: (state, action) => {
-//       state.currentIngredient = action.payload; // установка текущего ингредиента
-//     }
-//   },
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(fetchIngredients.pending, (state) => {
-//         state.isLoading = true; // включаем лоадер
-//         state.hasError = false; // сбрасываем ошибку при новом запросе
-//       })
-//       .addCase(fetchIngredients.fulfilled, (state, action) => {
-//         state.isLoading = false; // отключаем лоадер
-//         state.ingredients = action.payload; // сохраняем полученные ингредиенты
-//       })
-//       .addCase(fetchIngredients.rejected, (state) => {
-//         state.isLoading = false; // отключаем лоадер
-//         state.hasError = true; // включаем флаг ошибки
-//       });
-//   }
-// });
-
-// // Экшены
-// export const { setCurrentIngredient } = ingredientsSlice.actions;
-
-// // Селекторы
-// export const selectIngredients = (state: RootState) =>
-//   state.ingredients.ingredients;
-// export const selectIsLoading = (state: RootState) =>
-//   state.ingredients.isLoading;
-// export const selectHasError = (state: RootState) => state.ingredients.hasError;
-// export const selectCurrentIngredient = (state: RootState) =>
-//   state.ingredients.currentIngredient; // селектор для текущего ингредиента
-
-// // Экспортируем редюсер
-// export default ingredientsSlice.reducer;
-
+import { getIngredientsApi } from '../../utils/burger-api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getIngredientsApi } from '../../utils/burger-api'; // Импортируем функцию для получения всех ингредиентов
-import { TIngredient, TConstructorIngredient } from '../../utils/types';
-import { RootState } from '../store';
+import { TIngredient, RequestStatus } from '../../utils/types';
 
-export const fetchIngredientById = createAsyncThunk(
-  'ingredients/fetchIngredientById',
-  async (id: string) => {
-    const ingredients = await getIngredientsApi(); // Получаем все ингредиенты
-    const ingredient = ingredients.find((ingredient) => ingredient._id === id); // Находим нужный по ID
-
-    return ingredient;
-  }
-);
-
-//Посмотреть в вебинаре, Максим сказал, что там есть
 type TIngredientState = {
-  ingredients: TIngredient[]; // список ингредиентов
-  isLoading: boolean; // отслеживание процесса загрузки данных
-  // hasError: boolean;
-  // currentIngredient: TIngredient | null;
+  data: TIngredient[];
+  status: RequestStatus;
 };
 
 const initialState: TIngredientState = {
-  ingredients: [],
-  isLoading: false
-  // hasError: false,
-  // currentIngredient: null
+  data: [],
+  status: RequestStatus.Idle
 };
 
-// Асинхронный Thunk для получения данных ингредиентов
-export const fetchIngredients = createAsyncThunk(
-  'ingredients/fetchIngredients',
-  async () => {
-    const response = await getIngredientsApi();
-    return response; // возвращаем данные ингредиентов
-  }
+export const getIngredients = createAsyncThunk<TIngredient[]>(
+  'ingredients/getIngredients',
+  getIngredientsApi
 );
 
-const ingredientsSlice = createSlice({
+export const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState,
-  reducers: {
-    //Максим удалил
-    // setCurrentIngredient: (state, action) => {
-    //   state.currentIngredient = action.payload; // установка текущего ингредиента
-    // }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchIngredients.pending, (state) => {
-        state.isLoading = true; // включаем лоадер
-        //Максим удалил 10.46
-        // state.hasError = false; // сбрасываем ошибку при новом запросе
+      .addCase(getIngredients.pending, (state) => {
+        state.status = RequestStatus.Loading;
       })
-      .addCase(fetchIngredients.fulfilled, (state, action) => {
-        state.isLoading = false; // отключаем лоадер
-        state.ingredients = action.payload; // сохраняем полученные ингредиенты
+      .addCase(getIngredients.fulfilled, (state, action) => {
+        state.status = RequestStatus.Success;
+        state.data = action.payload;
       })
-      .addCase(fetchIngredients.rejected, (state) => {
-        state.isLoading = false; // отключаем лоадер
-        // state.hasError = true; // включаем флаг ошибки
+      .addCase(getIngredients.rejected, (state) => {
+        state.status = RequestStatus.Failed;
       });
+  },
+  selectors: {
+    selectIngredientsData: (state: TIngredientState) => state.data,
+    selectIngredientsStatus: (state: TIngredientState) => state.status
   }
 });
 
-// Экшены
-//Максим удалил
-// export const { setCurrentIngredient } = ingredientsSlice.actions;
-
-// Селекторы
-export const selectIngredients = (state: RootState) =>
-  state.ingredients.ingredients;
-export const selectIsLoading = (state: RootState) =>
-  state.ingredients.isLoading;
-// export const selectHasError = (state: RootState) => state.ingredients.hasError;
-// export const selectCurrentIngredient = (state: RootState) =>
-//   state.ingredients.currentIngredient;
-
-// Экспортируем редюсер
-export default ingredientsSlice.reducer;
+export const selectIngredients = ingredientsSlice.selectors;
+export const { selectIngredientsData, selectIngredientsStatus } =
+  ingredientsSlice.selectors;
+export const ingredientsReducer = ingredientsSlice.reducer;

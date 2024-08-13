@@ -1,7 +1,8 @@
-// src/services/slices/ordersSlice.ts
+// Проверить ordersSlice
+
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { TOrder } from '@utils-types';
-import { getOrderByNumberApi } from '../../utils/burger-api'; // Импортируйте API метод
+import { TOrder, RequestStatus } from '@utils-types';
+import { getOrdersApi, getOrderByNumberApi } from '../../utils/burger-api'; // Импортируйте API метод
 
 type TOrderResponse = {
   orders: TOrder[];
@@ -11,65 +12,46 @@ type TOrdersState = {
   orders: TOrder[];
   isLoading: boolean;
   hasError: boolean;
+  currentOrder: TOrder | null; // текущий заказ для отображения
+  status: RequestStatus;
 };
 
 const initialState: TOrdersState = {
   orders: [],
   isLoading: false,
   hasError: false,
+  currentOrder: null,
+  status: RequestStatus.Idle
 };
 
-// Асинхронная Thunk-функция
-export const fetchOrderData = createAsyncThunk<TOrder, number>(
-  'orders/fetchOrderData',
-  async (orderNumber, { rejectWithValue }) => {
-    try {
-      const response: TOrderResponse = await getOrderByNumberApi(orderNumber);
-      const order = response.orders[0]; // Предполагается, что возвращается массив заказов
-      if (!order) {
-        throw new Error('Заказ не найден');
-      }
-      return order;
-    } catch (error) {
-      return rejectWithValue('Ошибка при получении данных заказа');
-    }
-  }
-);
+// Асинхронная Thunk-функция для получения списка заказов
+export const getOrders = createAsyncThunk('orders/getOrders', getOrdersApi);
 
-const ordersSlice = createSlice({
+export const ordersSlice = createSlice({
   name: 'orders',
   initialState,
-  reducers: {
-    setOrders: (state, action: PayloadAction<TOrder[]>) => {
-      state.orders = action.payload;
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
-    setError: (state, action: PayloadAction<boolean>) => {
-      state.hasError = action.payload;
-    }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchOrderData.pending, (state) => {
-        state.isLoading = true;
-        state.hasError = false;
+      .addCase(getOrders.pending, (state) => {
+        state.status = RequestStatus.Loading;
       })
       .addCase(
-        fetchOrderData.fulfilled,
-        (state, action: PayloadAction<TOrder>) => {
-          state.isLoading = false;
+        getOrders.fulfilled,
+        (state, action: PayloadAction<TOrder[]>) => {
+          state.orders = action.payload;
+          state.status = RequestStatus.Success;
         }
       )
-      .addCase(fetchOrderData.rejected, (state, action) => {
-        state.isLoading = false;
-        state.hasError = true;
-        console.error(action.payload); // Обработка ошибки
+      .addCase(getOrders.rejected, (state) => {
+        state.status = RequestStatus.Failed;
       });
+  },
+  selectors: {
+    selectOrders: (state) => state.orders,
+    selectOrdersStatus: (state) => state.status
   }
 });
 
-export const { setOrders, setLoading, setError } =
-  ordersSlice.actions;
-export default ordersSlice.reducer;
+export const { selectOrders, selectOrdersStatus } = ordersSlice.selectors;
+export const ordersReducer = ordersSlice.reducer;

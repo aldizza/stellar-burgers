@@ -29,11 +29,13 @@
 //   );
 // };
 
-//Лента заказов?
+//Лента заказов
+
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
+// import { selectFeed } from '../../services/slices/feedSlice';
 import { RootState } from '../../services/store';
 
 const getOrders = (orders: TOrder[], status: string): number[] =>
@@ -43,9 +45,8 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
     .slice(0, 20);
 
 export const FeedInfo: FC = () => {
-  // Извлечение данных из состояния
-  const orders = useSelector((state: RootState) => state.orders.orders);
-  const feed = useSelector((state: RootState) => state.orders.feed); // Используем orders.feed
+  const orders: TOrder[] = useSelector((state: RootState) => state.feed.orders);
+  const feed = useSelector((state: RootState) => state.feed);
 
   const readyOrders = getOrders(orders, 'done');
   const pendingOrders = getOrders(orders, 'pending');

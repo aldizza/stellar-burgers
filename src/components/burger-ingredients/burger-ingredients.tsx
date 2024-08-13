@@ -73,16 +73,14 @@ import { AppDispatch } from '../../services/store';
 import { TTabMode, TIngredientState } from '../../utils/types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import {
-  fetchIngredients,
-  selectIngredients,
-  selectIsLoading
+  getIngredients,
+  selectIngredientsData
 } from '../../services/slices/ingridientsSlice';
 
 export const BurgerIngredients: FC = () => {
   const dispatch: AppDispatch = useDispatch();
 
-  const ingredients = useSelector(selectIngredients);
-  const isLoading = useSelector(selectIsLoading);
+  const ingredients = useSelector(selectIngredientsData);
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
@@ -94,7 +92,7 @@ export const BurgerIngredients: FC = () => {
   const [saucesRef, inViewSauces] = useInView({ threshold: 0 });
 
   useEffect(() => {
-    dispatch(fetchIngredients()); // Запрашиваем данные при загрузке компонента
+    dispatch(getIngredients());
   }, [dispatch]);
 
   useEffect(() => {

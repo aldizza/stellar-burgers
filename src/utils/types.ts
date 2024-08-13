@@ -58,4 +58,23 @@ export type TIngredientState = {
 };
 
 //Тип для статуса запроса
-export type RequestStatus = 'Idle' | 'Loading' | 'Success' | 'Failed';
+// export type RequestStatus = 'Idle' | 'Loading' | 'Success' | 'Failed';
+//или
+//Тип для статуса запроса
+export enum RequestStatus {
+  Idle = 'Idle',
+  Loading = 'Loading',
+  Success = 'Success',
+  Failed = 'Failed'
+}
+
+export type TRegisterData = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export type TLoginData = {
+  email: string;
+  password: string;
+};
