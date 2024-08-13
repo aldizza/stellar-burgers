@@ -1,3 +1,5 @@
+//яяяя
+
 // стартер Практикум
 
 // import { configureStore } from '@reduxjs/toolkit';

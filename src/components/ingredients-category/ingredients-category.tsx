@@ -1,3 +1,5 @@
+//яяяяя
+
 //Я.Практикум стартер
 
 // import { forwardRef, useMemo } from 'react';
