@@ -9,18 +9,14 @@ type TOrderResponse = {
 
 type TOrdersState = {
   orders: TOrder[];
-  orderData: TOrder | null;
   isLoading: boolean;
   hasError: boolean;
-  feed: any;
 };
 
 const initialState: TOrdersState = {
   orders: [],
-  orderData: null,
   isLoading: false,
   hasError: false,
-  feed: {}
 };
 
 // Асинхронная Thunk-функция
@@ -47,9 +43,6 @@ const ordersSlice = createSlice({
     setOrders: (state, action: PayloadAction<TOrder[]>) => {
       state.orders = action.payload;
     },
-    setOrderData: (state, action: PayloadAction<TOrder | null>) => {
-      state.orderData = action.payload;
-    },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
     },
@@ -67,7 +60,6 @@ const ordersSlice = createSlice({
         fetchOrderData.fulfilled,
         (state, action: PayloadAction<TOrder>) => {
           state.isLoading = false;
-          state.orderData = action.payload;
         }
       )
       .addCase(fetchOrderData.rejected, (state, action) => {
@@ -78,6 +70,6 @@ const ordersSlice = createSlice({
   }
 });
 
-export const { setOrders, setOrderData, setLoading, setError } =
+export const { setOrders, setLoading, setError } =
   ordersSlice.actions;
 export default ordersSlice.reducer;

@@ -4,12 +4,16 @@ import { TOrder } from '@utils-types';
 
 type TFeedState = {
   orders: TOrder[];
+  total: number;
+  totalToday: number;
   isLoading: boolean;
   hasError: boolean;
 };
 
 const initialState: TFeedState = {
   orders: [],
+  total: 0,
+  totalToday: 0,
   isLoading: false,
   hasError: false
 };

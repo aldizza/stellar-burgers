@@ -112,15 +112,15 @@ export const fetchIngredientById = createAsyncThunk(
 type TIngredientState = {
   ingredients: TIngredient[]; // список ингредиентов
   isLoading: boolean; // отслеживание процесса загрузки данных
-  hasError: boolean;
-  currentIngredient: TIngredient | null;
+  // hasError: boolean;
+  // currentIngredient: TIngredient | null;
 };
 
 const initialState: TIngredientState = {
   ingredients: [],
-  isLoading: false,
-  hasError: false,
-  currentIngredient: null
+  isLoading: false
+  // hasError: false,
+  // currentIngredient: null
 };
 
 // Асинхронный Thunk для получения данных ингредиентов
@@ -154,7 +154,7 @@ const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredients.rejected, (state) => {
         state.isLoading = false; // отключаем лоадер
-        state.hasError = true; // включаем флаг ошибки
+        // state.hasError = true; // включаем флаг ошибки
       });
   }
 });
@@ -168,9 +168,9 @@ export const selectIngredients = (state: RootState) =>
   state.ingredients.ingredients;
 export const selectIsLoading = (state: RootState) =>
   state.ingredients.isLoading;
-export const selectHasError = (state: RootState) => state.ingredients.hasError;
-export const selectCurrentIngredient = (state: RootState) =>
-  state.ingredients.currentIngredient;
+// export const selectHasError = (state: RootState) => state.ingredients.hasError;
+// export const selectCurrentIngredient = (state: RootState) =>
+//   state.ingredients.currentIngredient;
 
 // Экспортируем редюсер
 export default ingredientsSlice.reducer;

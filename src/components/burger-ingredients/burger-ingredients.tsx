@@ -75,8 +75,7 @@ import { BurgerIngredientsUI } from '../ui/burger-ingredients';
 import {
   fetchIngredients,
   selectIngredients,
-  selectIsLoading,
-  selectHasError
+  selectIsLoading
 } from '../../services/slices/ingridientsSlice';
 
 export const BurgerIngredients: FC = () => {
@@ -84,7 +83,6 @@ export const BurgerIngredients: FC = () => {
 
   const ingredients = useSelector(selectIngredients);
   const isLoading = useSelector(selectIsLoading);
-  const hasError = useSelector(selectHasError);
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);

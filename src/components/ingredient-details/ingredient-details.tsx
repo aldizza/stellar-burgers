@@ -54,7 +54,7 @@ export const IngredientDetails: FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const ingredientData = useSelector(selectIngredients).find(
-    (item) => item._id == id
+    (item) => item._id === id
   );
 
   if (!ingredientData) {

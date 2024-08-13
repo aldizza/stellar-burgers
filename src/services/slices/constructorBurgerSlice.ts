@@ -1,3 +1,6 @@
+//ИСПРАВИТЬ МНОГО ОШИБОК
+
+
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import {
   TConstructorState,
@@ -11,10 +14,6 @@ import { getIngredientsApi } from '../../utils/burger-api';
 const initialState: TConstructorState = {
   bun: null,
   ingredients: [],
-  isLoading: false,
-  hasError: false,
-  orderRequest: false,
-  orderModalData: null
 };
 
 // Асинхронная Thunk-функция для получения ингредиентов
@@ -52,30 +51,7 @@ const constructorBurgerSlice = createSlice({
       const [movedIngredient] = state.ingredients.splice(from, 1);
       state.ingredients.splice(to, 0, movedIngredient);
     },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.isLoading = action.payload;
-    },
-    setError: (state, action: PayloadAction<boolean>) => {
-      state.hasError = action.payload;
-    }
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchIngredients.pending, (state) => {
-        state.isLoading = true;
-      })
-      .addCase(
-        fetchIngredients.fulfilled,
-        (state, action: PayloadAction<TConstructorIngredient[]>) => {
-          state.ingredients = action.payload; // Устанавливаем полученные ингредиенты
-          state.isLoading = false;
-        }
-      )
-      .addCase(fetchIngredients.rejected, (state) => {
-        state.isLoading = false;
-        state.hasError = true;
-      });
-  }
 });
 
 export const {
@@ -83,8 +59,6 @@ export const {
   addIngredient,
   removeIngredient,
   moveIngredient,
-  setLoading,
-  setError
 } = constructorBurgerSlice.actions;
 
 export default constructorBurgerSlice.reducer;
