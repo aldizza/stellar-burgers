@@ -1,4 +1,3 @@
-//яяяяя
 
 // import { FC, memo } from 'react';
 // import { useLocation } from 'react-router-dom';
@@ -28,19 +27,18 @@ import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BurgerIngredientUI } from '@ui';
 import { TBurgerIngredientProps } from './type';
+import { useDispatch } from '../../services/store';
+import { addIngredient } from '../../services/slices/burgerConstructorSlice';
 
 export const BurgerIngredient: FC<TBurgerIngredientProps> = ({
   ingredient,
   count
 }) => {
   const location = useLocation();
-  const navigate = useNavigate();
 
   //От наставника: handleAdd не навигация, а диспатч события, а навигация внутки компонента Link
   const handleAdd = () => {
-    navigate(`/ingredients/${ingredient._id}`, {
-      state: { background: location }
-    });
+    dispatch(addIngredient(ingredient));
   };
 
   return (

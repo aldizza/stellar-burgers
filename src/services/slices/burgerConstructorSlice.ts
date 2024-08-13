@@ -12,7 +12,7 @@ import {
   nanoid
 } from '@reduxjs/toolkit';
 
-interface BurgerConstructorState {
+interface IBurgerConstructorState {
   bun: TConstructorIngredient | null;
   ingredients: TConstructorIngredient[];
   order: TOrder | null;
@@ -20,7 +20,7 @@ interface BurgerConstructorState {
   requestStatus: RequestStatus;
 }
 
-const initialState: BurgerConstructorState = {
+const initialState: IBurgerConstructorState = {
   bun: null,
   ingredients: [],
   order: null,
@@ -29,16 +29,26 @@ const initialState: BurgerConstructorState = {
 };
 
 //??? Переделать, может можно изящней?
+// export const orderBurger = createAsyncThunk<TOrder, string[]>(
+//   'burgerConstructor/orderBurger',
+//   async (ingredientIds) => (await orderBurgerApi(ingredientIds)).order
+// );
+
+//Проверка не работает(
 export const orderBurger = createAsyncThunk<TOrder, string[]>(
   'burgerConstructor/orderBurger',
-  async (ingredientIds) => (await orderBurgerApi(ingredientIds)).order
+  async (ingredientIds) => {
+    const response = await orderBurgerApi(ingredientIds);
+    console.log('Order response:', response);
+    return response.order;
+  }
 );
 
 export const burgerConstructorSlice = createSlice({
   name: 'burgerConstructor',
   initialState,
   reducers: {
-    addToConstructor: {
+    addIngredient: {
       reducer: (state, { payload }: PayloadAction<TConstructorIngredient>) => {
         if (payload.type === 'bun') {
           state.bun = payload;
@@ -50,12 +60,12 @@ export const burgerConstructorSlice = createSlice({
         payload: { ...ingredient, id: nanoid() }
       })
     },
-    removeFromConstructor: (state, action: PayloadAction<string>) => {
+    removeIngredient: (state, action: PayloadAction<string>) => {
       state.ingredients = state.ingredients.filter(
         (ingredient) => ingredient.id !== action.payload
       );
     },
-    sortingConstructor: (state, action) => {
+    sortingIngredients: (state, action) => {
       const { positionA, positionB } = action.payload;
       state.ingredients[positionA] = state.ingredients.splice(
         positionB,
@@ -99,8 +109,8 @@ export const {
 } = burgerConstructorSlice.selectors;
 
 export const {
-  addToConstructor,
-  removeFromConstructor,
-  sortingConstructor,
+  addIngredient,
+  removeIngredient,
+  sortingIngredients,
   clearConstructor
 } = burgerConstructorSlice.actions;
