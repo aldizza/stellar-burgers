@@ -13,15 +13,22 @@
 
 import { ProfileOrdersUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
-import { FC } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store'; // Импортируйте тип RootState
+import { FC, useEffect } from 'react';
+import { useSelector, useDispatch } from '../../services/store';
+import { getOrders, selectOrders } from '../../services/slices/ordersSlice';
+import { selectUser } from '../../services/slices/userSlice';
+import { AppDispatch } from 'src/services/store';
 
 export const ProfileOrders: FC = () => {
-  // Получаем заказы из состояния Redux store
-  const orders: TOrder[] = useSelector(
-    (state: RootState) => state.orders.orders
-  );
+  const orders: TOrder[] = useSelector(selectOrders);
+  const user = useSelector(selectUser);
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    if (user) {
+      dispatch(getOrders());
+    }
+  }, [user, dispatch]);
 
   return <ProfileOrdersUI orders={orders} />;
 };

@@ -36,18 +36,14 @@
 
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store';
 import styles from './constructor-page.module.css';
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
+import { selectIngredientsStatus } from '../../services/slices/ingridientsSlice';
 
 export const ConstructorPage: FC = () => {
-  const isIngredientsLoading = false;
-  // Получаем состояние загрузки ингредиентов из Redux
-  // const isIngredientsLoading = useSelector(
-  //   (state: RootState) => state.ingredients.isLoading
-  // );
+  const isIngredientsLoading = useSelector(selectIngredientsStatus);
 
   return (
     <>

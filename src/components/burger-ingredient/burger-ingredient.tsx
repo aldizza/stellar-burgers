@@ -1,4 +1,3 @@
-
 // import { FC, memo } from 'react';
 // import { useLocation } from 'react-router-dom';
 
@@ -34,9 +33,9 @@ export const BurgerIngredient: FC<TBurgerIngredientProps> = ({
   ingredient,
   count
 }) => {
+  const dispatch = useDispatch(); // Инициализируйте dispatch
   const location = useLocation();
 
-  //От наставника: handleAdd не навигация, а диспатч события, а навигация внутки компонента Link
   const handleAdd = () => {
     dispatch(addIngredient(ingredient));
   };
