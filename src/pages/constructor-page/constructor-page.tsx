@@ -41,13 +41,14 @@ import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
 import { selectIngredientsStatus } from '../../services/slices/ingridientsSlice';
+import { RequestStatus } from '@utils-types';
 
 export const ConstructorPage: FC = () => {
   const isIngredientsLoading = useSelector(selectIngredientsStatus);
 
   return (
     <>
-      {isIngredientsLoading ? (
+      {isIngredientsLoading === RequestStatus.Loading ? (
         <Preloader />
       ) : (
         <main className={styles.containerMain}>

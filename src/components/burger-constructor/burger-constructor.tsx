@@ -69,8 +69,6 @@ export const BurgerConstructor: FC = () => {
   const user = useSelector(getUser);
 
   const constructorItems = useSelector(selectConstructorsItems);
-  console.log('selectConstructorsItems: ', selectConstructorsItems);
-  // console.log('constructorItems:', constructorItems);
 
   const orderRequest =
     useSelector(selectConstructorsRequest) === RequestStatus.Loading;

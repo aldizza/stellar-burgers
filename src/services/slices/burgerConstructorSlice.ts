@@ -28,20 +28,9 @@ const initialState: IBurgerConstructorState = {
   requestStatus: RequestStatus.Idle
 };
 
-//??? Переделать, может можно изящней?
-// export const orderBurger = createAsyncThunk<TOrder, string[]>(
-//   'burgerConstructor/orderBurger',
-//   async (ingredientIds) => (await orderBurgerApi(ingredientIds)).order
-// );
-
-//Проверка не работает(
 export const orderBurger = createAsyncThunk<TOrder, string[]>(
   'burgerConstructor/orderBurger',
-  async (ingredientIds) => {
-    const response = await orderBurgerApi(ingredientIds);
-    console.log('Order response:', response);
-    return response.order;
-  }
+  async (ingredientIds) => (await orderBurgerApi(ingredientIds)).order
 );
 
 export const burgerConstructorSlice = createSlice({

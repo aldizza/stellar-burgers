@@ -35,7 +35,8 @@ export const Feed: FC = () => {
   }, [dispatch]);
 
   if (!orders.length) {
-    return <Preloader />;
+    return null;
+    // return <Preloader />;
   }
 
   return (

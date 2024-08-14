@@ -91,9 +91,10 @@ export const BurgerIngredients: FC = () => {
   const [mainsRef, inViewFilling] = useInView({ threshold: 0 });
   const [saucesRef, inViewSauces] = useInView({ threshold: 0 });
 
-  useEffect(() => {
-    dispatch(getIngredients());
-  }, [dispatch]);
+  //Максим убрал, так как я должна диспатчить выше, на уровне компонента app (делаем диспатч только на верхнем уровне)
+  // useEffect(() => {
+  //   dispatch(getIngredients());
+  // }, [dispatch]);
 
   useEffect(() => {
     if (inViewBuns) {
