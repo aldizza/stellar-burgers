@@ -49,7 +49,7 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const background = location.state?.background;
-  const atoken = getCookie('accessToken');
+  // const atoken = getCookie('accessToken');
 
 
   useEffect(() => {

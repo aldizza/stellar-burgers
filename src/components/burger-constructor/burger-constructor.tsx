@@ -74,21 +74,37 @@ export const BurgerConstructor: FC = () => {
     useSelector(selectorOrderStatus) === RequestStatus.Loading;
   const orderModalData = useSelector(selectorModalData);
 
+  // const onOrderClick = () => {
+  //   if (!isAuth) {
+  //     // return navigate('/login');
+  //     return;
+  //   }
+
+  //   if (!constructorItems.bun || orderRequest) return;
+  //   // console.log('No bun or request in progress');
+
+  //   const orderList = [
+  //     constructorItems.bun._id,
+  //     ...constructorItems.ingredients.map((item) => item._id)
+  //   ];
+
+  //   dispatch(orderBurger(orderList));
+  // };
+
   const onOrderClick = () => {
     if (!isAuth) {
       // return navigate('/login');
       return;
     }
-
+  
     if (!constructorItems.bun || orderRequest) return;
-    // console.log('No bun or request in progress');
-
+  
     const orderList = [
       constructorItems.bun._id,
       ...constructorItems.ingredients.map((item) => item._id)
     ];
-
-    dispatch(orderBurger(orderList));
+  
+    dispatch(orderBurger({ ingredients: orderList }));
   };
 
   const closeOrderModal = () => {

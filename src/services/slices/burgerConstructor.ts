@@ -25,20 +25,13 @@ const initialState: TConstructorState = {
   ingredients: []
 };
 
-export const orderBurger = createAsyncThunk<TOrder, string[]>(
+export const orderBurger = createAsyncThunk<TOrder, { ingredients: string[] }>(
   'burgerConstructor/orderBurger',
-  async (orderList) => (await orderBurgerApi(orderList)).order
+  async ({ ingredients }) => {
+    const response = await orderBurgerApi(ingredients);
+    return response.order;
+  }
 );
-
-// export const orderBurger = createAsyncThunk<TOrder, string[]>(
-//   'burgerConstructor/orderBurger',
-//   async (orderList) => {
-//     console.log('Order list sent to API:', orderList);
-//     const response = await orderBurgerApi(orderList);
-//     console.log('Order response from API:', response);
-//     return response.order;
-//   }
-// );
 
 export const burgerConstructorSlice = createSlice({
   name: 'burgerConstructor',
