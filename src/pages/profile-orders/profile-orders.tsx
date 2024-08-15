@@ -1,4 +1,5 @@
-//Стартер
+//Полностью готов
+// Стартер
 
 // import { ProfileOrdersUI } from '@ui-pages';
 // import { TOrder } from '@utils-types';
@@ -15,20 +16,17 @@ import { ProfileOrdersUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
-import { getOrders, selectOrders } from '../../services/slices/ordersSlice';
-import { selectUser } from '../../services/slices/userSlice';
+import { getOrders, selectorOrders } from '../../services/slices/orders';
 import { AppDispatch } from 'src/services/store';
 
 export const ProfileOrders: FC = () => {
-  const orders: TOrder[] = useSelector(selectOrders);
-  const user = useSelector(selectUser);
+  const orders: TOrder[] = useSelector(selectorOrders);
+
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    if (user) {
-      dispatch(getOrders());
-    }
-  }, [user, dispatch]);
+    dispatch(getOrders());
+  }, []);
 
   return <ProfileOrdersUI orders={orders} />;
 };

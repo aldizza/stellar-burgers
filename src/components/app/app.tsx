@@ -1,69 +1,133 @@
+//Стартер
+
+// import { ConstructorPage } from '@pages';
+// import '../../index.css';
+// import styles from './app.module.css';
+
+// import { AppHeader } from '@components';
+
+// const App = () => (
+//   <div className={styles.app}>
+//     <AppHeader />
+//     <ConstructorPage />
+//   </div>
+// );
+
+// export default App;
+
 import {
   ConstructorPage,
   Feed,
-  Login,
-  Register,
   ForgotPassword,
-  ResetPassword,
+  Login,
+  NotFound404,
   Profile,
   ProfileOrders,
-  NotFound404
+  Register,
+  ResetPassword
 } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
-import { AppHeader, Modal, OrderInfo, IngredientDetails } from '@components';
+import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
 import {
-  Route,
   Routes,
-  BrowserRouter,
+  Route,
+  // Outlet,
   useLocation,
   useNavigate
 } from 'react-router-dom';
-import { FC, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { getIngredients } from '../../services/slices/ingridientsSlice';
-import { AppDispatch } from '../../services/store';
+// import { ProtectedRoute } from '../protected-route';
+import { useDispatch } from '../../services/store';
+import { useEffect } from 'react';
+import { getIngredients } from '../../services/slices/ingredients';
+import { getUser, selectorRequestStatus } from '../../services/slices/user';
+import { getCookie } from '../../utils/cookie';
+import { selectorisAuthChecked, authCheck } from '../../services/slices/user';
 
-interface ILocationState {
-  backgroundLocation?: Location;
-}
-
-const App: FC = () => {
+const App = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch: AppDispatch = useDispatch();
+  const background = location.state?.background;
+  const atoken = getCookie('accessToken');
 
-  const handleModalClose = () => {
-    navigate(-1); // Закрытие модального окна
-  };
-
-  const backgroundLocation = location.state && location.state.background;
 
   useEffect(() => {
     dispatch(getIngredients());
-  }, [dispatch]);
+  }, []);
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={backgroundLocation || location}>
+      <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed' element={<Feed />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/profile/orders' element={<ProfileOrders />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route
+          path='/login'
+          element={
+            // <ProtectedRoute onlyUnAuth>
+            <Login />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/register'
+          element={
+            // <ProtectedRoute onlyUnAuth>
+            <Register />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            // <ProtectedRoute onlyUnAuth>
+            <ForgotPassword />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/reset-password'
+          element={
+            // <ProtectedRoute onlyUnAuth>
+            <ResetPassword />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile'
+          element={
+            // <ProtectedRoute>
+            <Profile />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders'
+          element={
+            // <ProtectedRoute>
+            <ProfileOrders />
+            // </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/profile/orders/:number'
+          element={
+            // <ProtectedRoute>
+            <OrderInfo />
+            // </ProtectedRoute>
+          }
+        />
         <Route path='*' element={<NotFound404 />} />
       </Routes>
-
-      {backgroundLocation && (
+      {background && (
         <Routes>
           <Route
             path='/feed/:number'
             element={
-              <Modal title='Информация о заказе' onClose={handleModalClose}>
+              <Modal title={'Детали заказа'} onClose={() => navigate(-1)}>
                 <OrderInfo />
               </Modal>
             }
@@ -71,7 +135,7 @@ const App: FC = () => {
           <Route
             path='/ingredients/:id'
             element={
-              <Modal title='Детали ингредиентов' onClose={handleModalClose}>
+              <Modal title={'Детали ингредиента'} onClose={() => navigate(-1)}>
                 <IngredientDetails />
               </Modal>
             }
@@ -79,8 +143,10 @@ const App: FC = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title='Информация о заказе' onClose={handleModalClose}>
+              <Modal title={''} onClose={() => navigate(-1)}>
+                {/* <ProtectedRoute> */}
                 <OrderInfo />
+                {/* </ProtectedRoute> */}
               </Modal>
             }
           />
@@ -89,5 +155,4 @@ const App: FC = () => {
     </div>
   );
 };
-
 export default App;

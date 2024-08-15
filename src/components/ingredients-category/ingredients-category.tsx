@@ -1,4 +1,5 @@
-//Я.Практикум стартер
+//Полностью готово
+//Стартер
 
 // import { forwardRef, useMemo } from 'react';
 // import { TIngredientsCategoryProps } from './type';
@@ -10,12 +11,12 @@
 //   TIngredientsCategoryProps
 // >(({ title, titleRef, ingredients }, ref) => {
 //   /** TODO: взять переменную из стора */
-// const burgerConstructor = {
-//   bun: {
-//     _id: ''
-//   },
-//   ingredients: []
-// };
+//   const burgerConstructor = {
+//     bun: {
+//       _id: ''
+//     },
+//     ingredients: []
+//   };
 
 //   const ingredientsCounters = useMemo(() => {
 //     const { bun, ingredients } = burgerConstructor;
@@ -39,17 +40,17 @@
 //   );
 // });
 
-import React, { useMemo, forwardRef } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/store';
+import { forwardRef, useMemo } from 'react';
 import { TIngredientsCategoryProps } from './type';
+import { TIngredient } from '@utils-types';
 import { IngredientsCategoryUI } from '../ui/ingredients-category';
+import { useSelector } from '../../services/store';
+import { RootState } from '../../services/store';
 
 export const IngredientsCategory = forwardRef<
   HTMLUListElement,
   TIngredientsCategoryProps
 >(({ title, titleRef, ingredients }, ref) => {
-  // Извлекаем данные из стора
   const burgerConstructor = useSelector(
     (state: RootState) => state.burgerConstructor
   );
@@ -57,7 +58,7 @@ export const IngredientsCategory = forwardRef<
   const ingredientsCounters = useMemo(() => {
     const { bun, ingredients } = burgerConstructor;
     const counters: { [key: string]: number } = {};
-    ingredients.forEach((ingredient) => {
+    ingredients.forEach((ingredient: TIngredient) => {
       if (!counters[ingredient._id]) counters[ingredient._id] = 0;
       counters[ingredient._id]++;
     });

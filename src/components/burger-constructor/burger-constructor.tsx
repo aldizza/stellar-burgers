@@ -1,4 +1,4 @@
-// стартер Я.Практикум
+//Стартер
 
 // import { FC, useMemo } from 'react';
 // import { TConstructorIngredient } from '@utils-types';
@@ -46,50 +46,55 @@
 //   );
 // };
 
-//Полностью сделано
-//Можно потом переделать onOrderClick
-
 import { FC, useMemo } from 'react';
 import { TConstructorIngredient, RequestStatus } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
 import { useNavigate } from 'react-router-dom';
 import {
+  getOrderByNumber,
+  selectorModalData,
+  selectorOrderStatus,
+  resetOrder
+} from '../../services/slices/order';
+import { selectorisAuthChecked } from '../../services/slices/user';
+import {
   orderBurger,
   clearConstructor,
-  selectConstructorsItems,
-  selectConstructorsRequest,
-  selectConstructorsOrder
-} from '../../services/slices/burgerConstructorSlice';
-import { getUser } from '../../services/slices/userSlice';
+  selectorConstructorItems
+} from '../../services/slices/burgerConstructor';
+import { RootState } from '../../services/store';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector(getUser);
-
-  const constructorItems = useSelector(selectConstructorsItems);
-
+  const isAuth = useSelector(selectorisAuthChecked);
+  const constructorItems = useSelector(selectorConstructorItems);
   const orderRequest =
-    useSelector(selectConstructorsRequest) === RequestStatus.Loading;
-
-  const orderModalData = useSelector(selectConstructorsOrder);
+    useSelector(selectorOrderStatus) === RequestStatus.Loading;
+  const orderModalData = useSelector(selectorModalData);
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
-    if (!user) {
-      navigate('/login');
-    } else {
-      const ingredientIds = [
-        constructorItems.bun._id,
-        ...constructorItems.ingredients.map((item) => item._id)
-      ];
-      dispatch(orderBurger(ingredientIds));
+    if (!isAuth) {
+      // return navigate('/login');
+      return;
     }
+
+    if (!constructorItems.bun || orderRequest) return;
+    // console.log('No bun or request in progress');
+
+    const orderList = [
+      constructorItems.bun._id,
+      ...constructorItems.ingredients.map((item) => item._id)
+    ];
+
+    dispatch(orderBurger(orderList));
   };
 
   const closeOrderModal = () => {
+    dispatch(resetOrder());
     dispatch(clearConstructor());
+    navigate('/');
   };
 
   const price = useMemo(

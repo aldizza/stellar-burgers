@@ -1,18 +1,17 @@
-//Слайс для детального заказа
-//Детальный заказ будет заполняться когда заходим по прямому урлу и загружаем
-//страницу заказа по прямому урлу, тогда будет диспатчится событие на получение заказа по его номеру
-// и устанавливаться в стор
+//управляет состоянием заказа в приложении
+//Готов
 
-//Полностью готов, ничего править не нужно
-
+import { orderBurgerApi } from '@api';
 import { getOrderByNumberApi } from '../../utils/burger-api';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { TOrder, RequestStatus } from '../../utils/types';
+import { TOrder } from '@utils-types';
+import { RequestStatus } from '../../utils/types';
 
-interface TOrderState {
+export type TOrderState = {
+  //детальная информация о заказе (открыла модальное окно, получила данные через запрос по номеру заказа из урла)
   info: TOrder | null;
   status: RequestStatus;
-}
+};
 
 export const initialState: TOrderState = {
   info: null,
@@ -30,26 +29,29 @@ export const getOrderByNumber = createAsyncThunk<TOrder, number>(
 export const orderSlice = createSlice({
   name: 'order',
   initialState,
-  reducers: {},
+  reducers: {
+    resetOrder: () => initialState
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getOrderByNumber.pending, (state) => {
         state.status = RequestStatus.Loading;
       })
       .addCase(getOrderByNumber.fulfilled, (state, action) => {
-        state.status = RequestStatus.Success;
         state.info = action.payload;
+        state.status = RequestStatus.Success;
       })
       .addCase(getOrderByNumber.rejected, (state) => {
         state.status = RequestStatus.Failed;
       });
   },
   selectors: {
-    selectorOrderData: (state: TOrderState) => state.info,
-    selectorOrderStatus: (state: TOrderState) => state.status
+    selectorOrderStatus: (state) => state.status,
+    selectorModalData: (state) => state.info
   }
 });
+export const { resetOrder } = orderSlice.actions;
 
-export const selectorIngredients = orderSlice.selectors;
-export const { selectorOrderData, selectorOrderStatus } = orderSlice.selectors;
+export const { selectorOrderStatus, selectorModalData } = orderSlice.selectors;
+
 export const orderReducer = orderSlice.reducer;

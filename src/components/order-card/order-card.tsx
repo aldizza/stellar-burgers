@@ -1,5 +1,5 @@
-//Старткит Практикум
-
+//Полностью готов
+//Стартер
 // import { FC, memo, useMemo } from 'react';
 // import { useLocation } from 'react-router-dom';
 
@@ -65,7 +65,7 @@ import { RootState } from '../../services/store';
 import { OrderCardProps } from './type';
 import { TIngredient } from '@utils-types';
 import { OrderCardUI } from '../ui/order-card';
-import { selectIngredientsData } from '../../services/slices/ingridientsSlice';
+import { selectorIngredientsData } from '../../services/slices/ingredients';
 
 const maxIngredients = 6;
 
@@ -73,7 +73,7 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   const location = useLocation();
 
   // Получаем список ингредиентов из состояния Redux
-  const ingredients: TIngredient[] = useSelector(selectIngredientsData);
+  const ingredients: TIngredient[] = useSelector(selectorIngredientsData);
 
   const orderInfo = useMemo(() => {
     if (!ingredients.length) return null;

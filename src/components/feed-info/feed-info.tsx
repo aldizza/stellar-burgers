@@ -1,3 +1,5 @@
+//Лента заказов
+//Полностью готов
 //Стартер
 
 // import { FC } from 'react';
@@ -29,14 +31,16 @@
 //   );
 // };
 
-//Лента заказов
-
 import { FC } from 'react';
-import { useSelector } from 'react-redux';
+
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
-// import { selectFeed } from '../../services/slices/feedSlice';
-import { RootState } from '../../services/store';
+import {
+  selectorFeedOrders,
+  selectorFeedTotal,
+  selectorFeedTotalToday
+} from '../../services/slices/feed';
+import { useSelector } from '../../services/store';
 
 const getOrders = (orders: TOrder[], status: string): number[] =>
   orders
@@ -45,17 +49,22 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
     .slice(0, 20);
 
 export const FeedInfo: FC = () => {
-  const orders: TOrder[] = useSelector((state: RootState) => state.feed.orders);
-  const feed = useSelector((state: RootState) => state.feed);
+  const orders = useSelector(selectorFeedOrders);
+  const totalFeeds = useSelector(selectorFeedTotal);
+  const totalToday = useSelector(selectorFeedTotalToday);
 
   const readyOrders = getOrders(orders, 'done');
+
   const pendingOrders = getOrders(orders, 'pending');
 
   return (
     <FeedInfoUI
       readyOrders={readyOrders}
       pendingOrders={pendingOrders}
-      feed={feed}
+      feed={{
+        total: totalFeeds,
+        totalToday: totalToday
+      }}
     />
   );
 };

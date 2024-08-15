@@ -1,4 +1,4 @@
-//Стартер
+// Полностью готова
 
 // import { Preloader } from '@ui';
 // import { FeedUI } from '@ui-pages';
@@ -21,22 +21,20 @@ import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
 import { FC, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getFeeds, selectFeedOrders } from '../../services/slices/feedSlice';
+import { getFeeds, selectorFeedOrders } from '../../services/slices/feed';
 import { AppDispatch } from '../../services/store';
 
 export const Feed: FC = () => {
-  // Типизируйте dispatch как AppDispatch
   const dispatch: AppDispatch = useDispatch();
-  const orders: TOrder[] = useSelector(selectFeedOrders);
+  const orders: TOrder[] = useSelector(selectorFeedOrders);
 
   useEffect(() => {
-    // Теперь dispatch будет корректно типизирован для работы с AsyncThunk
     dispatch(getFeeds());
-  }, [dispatch]);
+  }, []);
 
   if (!orders.length) {
     return null;
-    // return <Preloader />;
+    return <Preloader />;
   }
 
   return (

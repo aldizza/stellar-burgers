@@ -1,5 +1,4 @@
-//стартер
-
+//Стартер
 // import { useState, useRef, useEffect, FC } from 'react';
 // import { useInView } from 'react-intersection-observer';
 
@@ -49,6 +48,8 @@
 //       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
 //   };
 
+//   return null;
+
 //   return (
 //     <BurgerIngredientsUI
 //       currentTab={currentTab}
@@ -68,33 +69,36 @@
 
 import { useState, useRef, useEffect, FC } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch } from '../../services/store';
-import { TTabMode, TIngredientState } from '../../utils/types';
+
+import { TTabMode } from '@utils-types';
 import { BurgerIngredientsUI } from '../ui/burger-ingredients';
-import {
-  getIngredients,
-  selectIngredientsData
-} from '../../services/slices/ingridientsSlice';
+import { useSelector } from '../../services/store';
+import { selectorIngredientsState } from '../../services/slices/ingredients';
 
 export const BurgerIngredients: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-
-  const ingredients = useSelector(selectIngredientsData);
+  const { ingredients, status } = useSelector(selectorIngredientsState);
+  const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
+  const mains = ingredients.filter((ingredient) => ingredient.type === 'main');
+  const sauces = ingredients.filter(
+    (ingredient) => ingredient.type === 'sauce'
+  );
 
   const [currentTab, setCurrentTab] = useState<TTabMode>('bun');
   const titleBunRef = useRef<HTMLHeadingElement>(null);
   const titleMainRef = useRef<HTMLHeadingElement>(null);
   const titleSaucesRef = useRef<HTMLHeadingElement>(null);
 
-  const [bunsRef, inViewBuns] = useInView({ threshold: 0 });
-  const [mainsRef, inViewFilling] = useInView({ threshold: 0 });
-  const [saucesRef, inViewSauces] = useInView({ threshold: 0 });
+  const [bunsRef, inViewBuns] = useInView({
+    threshold: 0
+  });
 
-  //Максим убрал, так как я должна диспатчить выше, на уровне компонента app (делаем диспатч только на верхнем уровне)
-  // useEffect(() => {
-  //   dispatch(getIngredients());
-  // }, [dispatch]);
+  const [mainsRef, inViewFilling] = useInView({
+    threshold: 0
+  });
+
+  const [saucesRef, inViewSauces] = useInView({
+    threshold: 0
+  });
 
   useEffect(() => {
     if (inViewBuns) {
@@ -115,13 +119,6 @@ export const BurgerIngredients: FC = () => {
     if (tab === 'sauce')
       titleSaucesRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  // Данные ингредиентов разделены по категориям
-  const buns = ingredients.filter((ingredient) => ingredient.type === 'bun');
-  const mains = ingredients.filter((ingredient) => ingredient.type === 'main');
-  const sauces = ingredients.filter(
-    (ingredient) => ingredient.type === 'sauce'
-  );
 
   return (
     <BurgerIngredientsUI

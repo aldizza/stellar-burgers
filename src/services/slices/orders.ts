@@ -1,26 +1,19 @@
-// Проверить ordersSlice
+//Готов
+//Заказы на странице профиля
 
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { TOrder, RequestStatus } from '@utils-types';
-import { getOrdersApi, getOrderByNumberApi } from '../../utils/burger-api'; // Импортируйте API метод
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { TOrder } from '@utils-types';
+import { RequestStatus } from '../../utils/types';
+import { getOrdersApi } from '../../utils/burger-api';
 
-type TOrderResponse = {
+export type TOrderState = {
+  //детальная информация о заказе (данные через запрос по номеру заказа из урла)
   orders: TOrder[];
-};
-
-type TOrdersState = {
-  orders: TOrder[];
-  isLoading: boolean;
-  hasError: boolean;
-  currentOrder: TOrder | null; // текущий заказ для отображения
   status: RequestStatus;
 };
 
-const initialState: TOrdersState = {
+export const initialState: TOrderState = {
   orders: [],
-  isLoading: false,
-  hasError: false,
-  currentOrder: null,
   status: RequestStatus.Idle
 };
 
@@ -48,10 +41,11 @@ export const ordersSlice = createSlice({
       });
   },
   selectors: {
-    selectOrders: (state) => state.orders,
-    selectOrdersStatus: (state) => state.status
+    selectorOrders: (state) => state.orders,
+    selectorOrdersStatus: (state) => state.status
   }
 });
 
-export const { selectOrders, selectOrdersStatus } = ordersSlice.selectors;
+export const { selectorOrders, selectorOrdersStatus } = ordersSlice.selectors;
+
 export const ordersReducer = ordersSlice.reducer;

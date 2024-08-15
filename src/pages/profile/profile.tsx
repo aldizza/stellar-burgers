@@ -1,13 +1,13 @@
+//Полностью готов
+
 import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from '../../services/store'; // Подключаем типизированные хуки
-import { updateUser } from '../../services/slices/userSlice'; // Импортируем экшен для обновления пользователя
-import { TUser } from '@utils-types';
+import { useDispatch, useSelector } from '../../services/store';
+import { getUser, updateUser } from '../../services/slices/user';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user) as TUser; // Используем правильный ключ для доступа к данным пользователя
-  const isLoading = useSelector((state) => state.user.isLoading); // Проверяем загрузку данных пользователя
+  const user = useSelector(getUser);
 
   const [formValue, setFormValue] = useState({
     name: user?.name || '',
@@ -51,10 +51,6 @@ export const Profile: FC = () => {
       [e.target.name]: e.target.value
     }));
   };
-
-  if (isLoading) {
-    return <div>Загрузка...</div>; // Показываем загрузку, если данные загружаются
-  }
 
   return (
     <ProfileUI

@@ -1,3 +1,6 @@
+//Полностью готово
+//Стартер
+
 // import { FC, memo } from 'react';
 // import { useLocation } from 'react-router-dom';
 
@@ -8,7 +11,6 @@
 //   ({ ingredient, count }) => {
 //     const location = useLocation();
 
-//     // Обработка добавления ингредиента
 //     const handleAdd = () => {};
 
 //     return (
@@ -22,20 +24,20 @@
 //   }
 // );
 
-import { FC, memo  } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { FC, memo } from 'react';
+import { useLocation } from 'react-router-dom';
+
 import { BurgerIngredientUI } from '@ui';
 import { TBurgerIngredientProps } from './type';
-import { useDispatch } from '../../services/store';
-import { addIngredient } from '../../services/slices/burgerConstructorSlice';
+import { useDispatch, useSelector } from '../../services/store';
+import { addIngredient } from '../../services/slices/burgerConstructor';
 
 export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
   ({ ingredient, count }) => {
-    const dispatch = useDispatch();
     const location = useLocation();
-
+    const dispatch = useDispatch();
     const handleAdd = () => {
-      dispatch(addIngredient(ingredient));
+      dispatch(addIngredient({ ...ingredient, id: ingredient._id }));
     };
 
     return (

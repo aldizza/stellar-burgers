@@ -1,3 +1,5 @@
+//Полностью готов
+
 //Стартер
 
 // import { useSelector } from '../../services/store';
@@ -34,17 +36,19 @@
 //   );
 // };
 
-import { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../services/store';
+
 import styles from './constructor-page.module.css';
+
 import { BurgerIngredients } from '../../components';
 import { BurgerConstructor } from '../../components';
 import { Preloader } from '../../components/ui';
-import { selectIngredientsStatus } from '../../services/slices/ingridientsSlice';
+import { FC } from 'react';
+import { selectorIngredientsLoading } from '../../services/slices/ingredients';
 import { RequestStatus } from '@utils-types';
 
 export const ConstructorPage: FC = () => {
-  const isIngredientsLoading = useSelector(selectIngredientsStatus);
+  const isIngredientsLoading = useSelector(selectorIngredientsLoading);
 
   return (
     <>

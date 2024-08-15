@@ -1,5 +1,4 @@
-// стартер Практикум
-
+//Стартер
 // import { configureStore } from '@reduxjs/toolkit';
 
 // import {
@@ -24,31 +23,33 @@
 
 // export default store;
 
-//Все сделано хорошо, править не надо
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+//Полностью готов
+
+import { configureStore } from '@reduxjs/toolkit';
+
 import {
   TypedUseSelectorHook,
   useDispatch as dispatchHook,
   useSelector as selectorHook
 } from 'react-redux';
 
-import { burgerConstructorSlice } from '../services/slices/burgerConstructorSlice';
-import { feedSlice } from '../services/slices/feedSlice';
-import { orderSlice } from '../services/slices/orderSlise';
-import { ingredientsSlice } from '../services/slices/ingridientsSlice';
-import { ordersSlice } from '../services/slices/ordersSlice';
-import { userSlice } from '../services/slices/userSlice';
+import { burgerConstructorSlice } from '../services/slices/burgerConstructor';
+import { feedSlice } from '../services/slices/feed';
+import { orderSlice } from '../services/slices/order';
+import { ingredientsSlice } from '../services/slices/ingredients';
+import { ordersSlice } from '../services/slices/orders';
+import { userSlice } from '../services/slices/user';
 
 const rootReducer = {
-  [ingredientsSlice.name]: ingredientsSlice.reducer,
   [burgerConstructorSlice.name]: burgerConstructorSlice.reducer,
   [feedSlice.name]: feedSlice.reducer,
   [orderSlice.name]: orderSlice.reducer,
+  [ingredientsSlice.name]: ingredientsSlice.reducer,
   [ordersSlice.name]: ordersSlice.reducer,
   [userSlice.name]: userSlice.reducer
 };
 
-export const store = configureStore({
+const store = configureStore({
   reducer: rootReducer,
   devTools: process.env.NODE_ENV !== 'production'
 });

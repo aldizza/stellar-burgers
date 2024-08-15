@@ -88,9 +88,9 @@ import { RootState, AppDispatch } from '../../services/store';
 import { useParams } from 'react-router-dom';
 import {
   getOrderByNumber,
-  selectorOrderData
-} from '../../services/slices/orderSlise';
-import { selectIngredientsData } from '../../services/slices/ingridientsSlice';
+  selectorModalData
+} from '../../services/slices/order';
+import { selectorIngredientsData } from '../../services/slices/ingredients';
 
 export const OrderInfo: FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -102,8 +102,8 @@ export const OrderInfo: FC = () => {
     dispatch(getOrderByNumber(orderNumber));
   }, []);
 
-  const orderData = useSelector(selectorOrderData);
-  const ingredients: TIngredient[] = useSelector(selectIngredientsData);
+  const orderData = useSelector(selectorModalData);
+  const ingredients: TIngredient[] = useSelector(selectorIngredientsData);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
@@ -147,8 +147,7 @@ export const OrderInfo: FC = () => {
   }, [orderData, ingredients]);
 
   if (!orderInfo) {
-    return null;
-    // return <Preloader />;
+    return <Preloader />;
   }
 
   return <OrderInfoUI orderInfo={orderInfo} />;

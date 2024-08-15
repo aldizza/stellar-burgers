@@ -37,44 +37,12 @@ export type TUser = {
   name: string;
 };
 
-//возможные режимы или состояния вкладок для переключения между различными категориями ингредиентов
 export type TTabMode = 'bun' | 'sauce' | 'main';
 
-// Определение типа состояния конструктора бургера
-//Должен содердать информацию об ингридиентах в конструкторе
-export type TConstructorState = {
-  bun: TBun | null;
-  ingredients: TConstructorIngredient[];
-};
-
-// Тип для булочки (TBun)
-export type TBun = TIngredient;
-
-//Тип для состояние ингредиентов
-export type TIngredientState = {
-  buns: TIngredient[]; // Массив булочек
-  mains: TIngredient[]; // Массив основных ингредиентов
-  sauces: TIngredient[]; // Массив соусов
-};
-
-//Тип для статуса запроса
-// export type RequestStatus = 'Idle' | 'Loading' | 'Success' | 'Failed';
-//или
-//Тип для статуса запроса
+//Статус для прелоадера (из вебинара с наставником)
 export enum RequestStatus {
   Idle = 'Idle',
   Loading = 'Loading',
   Success = 'Success',
   Failed = 'Failed'
 }
-
-export type TRegisterData = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-export type TLoginData = {
-  email: string;
-  password: string;
-};
