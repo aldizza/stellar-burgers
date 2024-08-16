@@ -51,7 +51,6 @@ const App = () => {
   const background = location.state?.background;
   // const atoken = getCookie('accessToken');
 
-
   useEffect(() => {
     dispatch(getIngredients());
   }, []);

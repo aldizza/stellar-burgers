@@ -30,7 +30,7 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    resetOrder: () => initialState
+    resetCreateOrder: () => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -50,7 +50,7 @@ export const orderSlice = createSlice({
     selectorModalData: (state) => state.info
   }
 });
-export const { resetOrder } = orderSlice.actions;
+export const { resetCreateOrder } = orderSlice.actions;
 
 export const { selectorOrderStatus, selectorModalData } = orderSlice.selectors;
 

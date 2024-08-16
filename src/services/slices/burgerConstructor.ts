@@ -25,13 +25,21 @@ const initialState: TConstructorState = {
   ingredients: []
 };
 
-export const orderBurger = createAsyncThunk<TOrder, { ingredients: string[] }>(
+// export const orderBurger = createAsyncThunk<TOrder, { ingredients: string[] }>(
+//   'burgerConstructor/orderBurger',
+//   async ({ ingredients }) => {
+//     const response = await orderBurgerApi(ingredients);
+//     return response.order;
+//   }
+// );
+
+export const createOrderBurger  = createAsyncThunk<TOrder, string[]>(
   'burgerConstructor/orderBurger',
-  async ({ ingredients }) => {
-    const response = await orderBurgerApi(ingredients);
-    return response.order;
-  }
+  async (ingredientsId) => (await orderBurgerApi(ingredientsId)).order
 );
+
+// санка для получения заказов
+// export const createOrderBurger = createAsyncThunk('order/constructor', orderBurgerApi);
 
 export const burgerConstructorSlice = createSlice({
   name: 'burgerConstructor',
@@ -64,9 +72,16 @@ export const burgerConstructorSlice = createSlice({
     ) => {
       const ingredients = state.ingredients;
       const ingredientId = action.payload.id;
-      const ingredientIndex = ingredients.findIndex((item) => item.id === ingredientId);
+      const ingredientIndex = ingredients.findIndex(
+        (item) => item.id === ingredientId
+      );
       if (ingredientIndex > 0) {
-        ingredients.splice(ingredientIndex - 1, 2, ingredients[ingredientIndex], ingredients[ingredientIndex - 1]);
+        ingredients.splice(
+          ingredientIndex - 1,
+          2,
+          ingredients[ingredientIndex],
+          ingredients[ingredientIndex - 1]
+        );
       }
     },
     ingredientMoveDown: (
@@ -75,9 +90,16 @@ export const burgerConstructorSlice = createSlice({
     ) => {
       const ingredients = state.ingredients;
       const ingredientId = action.payload.id;
-      const ingredientIndex = ingredients.findIndex((item) => item.id === ingredientId);
+      const ingredientIndex = ingredients.findIndex(
+        (item) => item.id === ingredientId
+      );
       if (ingredientIndex > -1 && ingredientIndex < ingredients.length - 1) {
-        ingredients.splice(ingredientIndex, 2, ingredients[ingredientIndex + 1], ingredients[ingredientIndex]);
+        ingredients.splice(
+          ingredientIndex,
+          2,
+          ingredients[ingredientIndex + 1],
+          ingredients[ingredientIndex]
+        );
       }
     },
     clearConstructor: (state) => {
@@ -92,11 +114,10 @@ export const burgerConstructorSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(orderBurger.fulfilled, (state) => {
-        state.bun = initialState.bun;
-        state.ingredients = initialState.ingredients;
-        })
+    builder.addCase(createOrderBurger.fulfilled, (state) => {
+      state.bun = initialState.bun;
+      state.ingredients = initialState.ingredients;
+    });
   },
   selectors: {
     selectorConstructorsItems: (state) => state

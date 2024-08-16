@@ -92,18 +92,20 @@ import {
 } from '../../services/slices/order';
 import { selectorIngredientsData } from '../../services/slices/ingredients';
 
+//C QA
 export const OrderInfo: FC = () => {
+  const number = useParams().number || '';
   const dispatch = useDispatch<AppDispatch>();
-  const { number } = useParams<{ number: string }>();
-  const orderNumber = Number(number);
+  const ingredients = useSelector(selectorIngredientsData);
+  
+  const orderData =  useSelector(selectorModalData);
+
 
   // Загрузка данных заказа при монтировании компонента
+  //Если заказа в сторе нет, то запрашиваем его
   useEffect(() => {
-    dispatch(getOrderByNumber(orderNumber));
-  }, []);
-
-  const orderData = useSelector(selectorModalData);
-  const ingredients: TIngredient[] = useSelector(selectorIngredientsData);
+    dispatch(getOrderByNumber(+number));
+  }, [dispatch, orderData, number]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {
