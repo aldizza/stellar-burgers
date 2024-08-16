@@ -124,7 +124,104 @@
 
 
 
+//мой вариант с неработающей модалкой
 
+// import { FC, useMemo } from 'react';
+// import { RequestStatus, TConstructorIngredient } from '@utils-types';
+// import { BurgerConstructorUI } from '@ui';
+// import { useDispatch, useSelector } from '../../services/store';
+// import { useNavigate } from 'react-router-dom';
+// import {
+//   clearConstructor,
+//   createOrderBurger,
+//   selectorConstructorItems,
+// } from '../../services/slices/burgerConstructor';
+// import {
+//   selectorModalData,
+//   selectorOrderStatus,
+//   resetCreateOrder
+// } from '../../services/slices/order';
+// import { getUser } from '../../services/slices/user';
+// import { getCookie } from '../../utils/cookie';
+
+// export const BurgerConstructor: FC = () => {
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const user = useSelector(getUser);
+//   const constructorItems = useSelector(selectorConstructorItems);
+//   const orderRequest = useSelector(selectorOrderStatus) === RequestStatus.Loading;
+//   const orderModalData = useSelector(selectorModalData);
+
+
+//   //Из QA
+//   // const onOrderClick = () => {
+//   //   console.log("onOrderClick called");
+//   //   //Если пользователя нет, то ты не авторизован
+//   //   if (!user) {
+//   //     navigate('/login');
+//   //     return;
+//   //   }
+
+//   //   //Если в конструктор не добавлена булка, заказ оформить нельзя
+//   //   if (!constructorItems.bun || orderRequest) return;
+
+//   //   dispatch(
+//   //     createOrderBurger([
+//   //       constructorItems.bun._id,
+//   //       ...constructorItems.ingredients.map((
+//   //         (item: TConstructorIngredient) => item._id)
+//   //       ),
+//   //       constructorItems.bun._id
+//   //     ])
+//   //   );
+//   // };  
+
+//   const onOrderClick = () => {
+//     if (!constructorItems.bun || orderRequest) return;
+//     if (!user) {
+//       navigate('/login');
+//     } else {
+//       const ingredientIds = [
+//         constructorItems.bun._id,
+//         ...constructorItems.ingredients.map((item) => item._id)
+//       ];
+//       dispatch(createOrderBurger(ingredientIds));
+//     }
+//   };
+
+//   //Из QA
+//   const closeOrderModal = () => {
+//     dispatch(resetCreateOrder());
+//     // dispatch(clearConstructor());
+//     // navigate('/');
+//   };
+
+//   const price = useMemo(
+//     () =>
+//       (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
+//       constructorItems.ingredients.reduce(
+//         (s: number, v: TConstructorIngredient) => s + v.price,
+//         0
+//       ),
+//     [constructorItems]
+//   );
+
+//   return (
+//     <BurgerConstructorUI
+//       price={price}
+//       orderRequest={orderRequest}
+//       constructorItems={constructorItems}
+//       orderModalData={orderModalData}
+//       onOrderClick={onOrderClick}
+//       closeOrderModal={closeOrderModal}
+//     />
+//   );
+// };
+
+
+
+
+//Исправления после видео наставника (16/08)
 
 import { FC, useMemo } from 'react';
 import { RequestStatus, TConstructorIngredient } from '@utils-types';
@@ -134,7 +231,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   clearConstructor,
   createOrderBurger,
-  selectorConstructorItems,
+  selectorBurgerIngredients,
 } from '../../services/slices/burgerConstructor';
 import {
   selectorModalData,
@@ -148,32 +245,46 @@ export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(getUser);
-  const constructorItems = useSelector(selectorConstructorItems);
+  const constructorItems = useSelector(selectorBurgerIngredients);
   const orderRequest = useSelector(selectorOrderStatus) === RequestStatus.Loading;
   const orderModalData = useSelector(selectorModalData);
 
 
   //Из QA
+  // const onOrderClick = () => {
+  //   console.log("onOrderClick called");
+  //   //Если пользователя нет, то ты не авторизован
+  //   if (!user) {
+  //     navigate('/login');
+  //     return;
+  //   }
+
+  //   //Если в конструктор не добавлена булка, заказ оформить нельзя
+  //   if (!constructorItems.bun || orderRequest) return;
+
+  //   dispatch(
+  //     createOrderBurger([
+  //       constructorItems.bun._id,
+  //       ...constructorItems.ingredients.map((
+  //         (item: TConstructorIngredient) => item._id)
+  //       ),
+  //       constructorItems.bun._id
+  //     ])
+  //   );
+  // };  
+
   const onOrderClick = () => {
-    //Если пользователя нет, то ты не авторизован
+    if (!constructorItems.bun || orderRequest) return;
     if (!user) {
       navigate('/login');
-      return;
-    }
-
-    //Если в конструктор не добавлена булка, заказ оформить нельзя
-    if (!constructorItems.bun || orderRequest) return;
-
-    dispatch(
-      createOrderBurger([
+    } else {
+      const ingredientIds = [
         constructorItems.bun._id,
-        ...constructorItems.ingredients.map((
-          (item: TConstructorIngredient) => item._id)
-        ),
-        constructorItems.bun._id
-      ])
-    );
-  };  
+        ...constructorItems.ingredients.map((item) => item._id)
+      ];
+      dispatch(createOrderBurger(ingredientIds));
+    }
+  };
 
   //Из QA
   const closeOrderModal = () => {
@@ -203,4 +314,7 @@ export const BurgerConstructor: FC = () => {
     />
   );
 };
+
+
+
 
