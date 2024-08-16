@@ -234,12 +234,18 @@ import {
   selectorBurgerIngredients,
 } from '../../services/slices/burgerConstructor';
 import {
-  selectorModalData,
   selectorOrderStatus,
-  resetCreateOrder
+  resetCreateOrder,
+  resetOrderModalData
 } from '../../services/slices/order';
+import {
+  selectorModalData,
+  // clearConstructor
+} from '../../services/slices/burgerConstructor';
+
 import { getUser } from '../../services/slices/user';
 import { getCookie } from '../../utils/cookie';
+import { useEffect } from 'react';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
@@ -288,9 +294,10 @@ export const BurgerConstructor: FC = () => {
 
   //Из QA
   const closeOrderModal = () => {
+    dispatch(resetOrderModalData());
     dispatch(resetCreateOrder());
-    // dispatch(clearConstructor());
-    // navigate('/');
+    dispatch(clearConstructor());
+    navigate('/');
   };
 
   const price = useMemo(
