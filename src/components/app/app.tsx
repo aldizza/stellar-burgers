@@ -12,18 +12,12 @@ import {
 import '../../index.css';
 import styles from './app.module.css';
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import {
-  Routes,
-  Route,
-  // Outlet,
-  useLocation,
-  useNavigate
-} from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../services/slices/ingredients';
-import { getCookie } from '../../utils/cookie';
 import { ProtectedRoute } from '../../components/protected-route';
+import { checkUserAuth } from '../../services/slices/user';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,7 +27,8 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
-  }, []);
+    dispatch(checkUserAuth());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>

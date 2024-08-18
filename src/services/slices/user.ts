@@ -46,13 +46,37 @@ export const checkUserAuth = createAsyncThunk<
 });
 
 // Экшен для входа пользователя
+// export const loginUser = createAsyncThunk(
+//   'user/login',
+//   async (loginData: TLoginData, { rejectWithValue }) => {
+//     try {
+//       const response = await loginUserApi(loginData);
+//       setCookie('accessToken', response.accessToken);
+//       localStorage.setItem('refreshToken', response.refreshToken);
+//       return response.user;
+//     } catch (error) {
+//       return rejectWithValue(error);
+//     }
+//   }
+// );
+
+// export const loginUser = createAsyncThunk<
+//   TUser,
+//   { email: string; password: string }
+// >('user/loginUser', async (user) => {
+//   const response = await loginUserApi(user);
+//   setCookie('accessToken', response.accessToken);
+//   setCookie('refreshToken', response.refreshToken);
+//   return response.user;
+// });
+
 export const loginUser = createAsyncThunk(
   'user/login',
   async (loginData: TLoginData, { rejectWithValue }) => {
     try {
       const response = await loginUserApi(loginData);
       setCookie('accessToken', response.accessToken);
-      localStorage.setItem('refreshToken', response.refreshToken);
+      setCookie('refreshToken', response.refreshToken);
       return response.user;
     } catch (error) {
       return rejectWithValue(error);
@@ -117,12 +141,14 @@ export const userSlice = createSlice({
         checkUserAuth.fulfilled,
         (state, action: PayloadAction<TUser>) => {
           state.data = action.payload;
+          state.isAuthChecked = true;
           state.requestStatus = RequestStatus.Success;
         }
       )
       .addCase(checkUserAuth.rejected, (state) => {
         state.isAuthChecked = false;
         state.requestStatus = RequestStatus.Failed;
+        state.data = null;
       })
       .addCase(checkUserAuth.pending, (state) => {
         state.requestStatus = RequestStatus.Loading;
