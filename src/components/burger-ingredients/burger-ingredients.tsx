@@ -1,3 +1,4 @@
+//Секция с ингредиентами, вкладкой и прокруткой
 //Стартер
 // import { useState, useRef, useEffect, FC } from 'react';
 // import { useInView } from 'react-intersection-observer';

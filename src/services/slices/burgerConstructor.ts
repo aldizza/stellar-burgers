@@ -297,7 +297,7 @@ import {
   createSlice,
   nanoid
 } from '@reduxjs/toolkit';
-import { RootState } from '../../services/store';
+// import { RootState } from '../../services/store';
 
 export interface TConstructorState {
   constructorItems: {
@@ -361,6 +361,7 @@ export const burgerConstructorSlice = createSlice({
         payload: { ...ingredient, id: nanoid() },
       }),
     },
+    
     removeIngredient: (
       sliceState,
       action: PayloadAction<TConstructorIngredient>
