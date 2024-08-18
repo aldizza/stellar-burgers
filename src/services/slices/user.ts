@@ -8,35 +8,45 @@ import {
   loginUserApi,
   getUserApi,
   updateUserApi,
-  logoutApi
+  logoutApi,
+  TAuthResponse,
+  TUserResponse
 } from '../../utils/burger-api';
 import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 
+// Тип состояния пользователя (QA)
 type TUserState = {
-  isAuthChecked: boolean; //Если не авторизован и запрашиваешь защищенный компонент, его не отдаст
+  isAuthChecked: boolean;
   data: TUser | null;
   requestStatus: RequestStatus;
 };
 
+// Начальное состояние
 export const initialState: TUserState = {
   isAuthChecked: false,
   data: null,
   requestStatus: RequestStatus.Idle
 };
 
-//экшен, который отправляет запрос к серверу, чтобы проверить, авторизован ли пользователь, и, если да, получить его данные
-export const checkUserAuth = createAsyncThunk(
-  'user/checkUserAuth',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await getUserApi();
-      return response.user;
-    } catch (err) {
-      return rejectWithValue(err);
+// Экшен для проверки авторизации пользователя
+export const checkUserAuth = createAsyncThunk<
+  TUser,
+  void,
+  { rejectValue: any }
+>('user/checkUserAuth', async (_, { rejectWithValue }) => {
+  try {
+    const response: TUserResponse = await getUserApi();
+    if (response.success) {
+      return response.user; // Возвращаем user напрямую
+    } else {
+      return rejectWithValue('Failed to fetch user');
     }
+  } catch (err) {
+    return rejectWithValue(err);
   }
-);
+});
 
+// Экшен для входа пользователя
 export const loginUser = createAsyncThunk(
   'user/login',
   async (loginData: TLoginData, { rejectWithValue }) => {
@@ -51,6 +61,7 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// Экшен для регистрации пользователя
 export const registerUser = createAsyncThunk(
   'user/register',
   async (registerData: TRegisterData, { rejectWithValue }) => {
@@ -65,6 +76,7 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+// Экшен для выхода пользователя
 export const logoutUser = createAsyncThunk(
   'user/logout',
   async (_, { rejectWithValue }) => {
@@ -78,6 +90,7 @@ export const logoutUser = createAsyncThunk(
   }
 );
 
+// Экшен для обновления данных пользователя
 export const updateUser = createAsyncThunk(
   'user/update',
   async (data: Partial<TRegisterData>, { rejectWithValue }) => {
@@ -90,41 +103,51 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+//В QA только 2
+// state.data = action.payload.user;
+// state.requestStatus = RequestStatus.Success;
+
+// Создание слайса пользователя
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    authCheck(state, action) {
+    authCheck(state, action: PayloadAction<boolean>) {
       state.isAuthChecked = action.payload;
     }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(checkUserAuth.fulfilled, (state, action) => {
-        state.isAuthChecked = true;
-        state.data = action.payload;
-        state.requestStatus = RequestStatus.Success;
-      })
-      .addCase(checkUserAuth.rejected, (state, action) => {
+      .addCase(
+        checkUserAuth.fulfilled,
+        (state, action: PayloadAction<TUser>) => {
+          state.data = action.payload;
+          state.requestStatus = RequestStatus.Success;
+        }
+      )
+      .addCase(checkUserAuth.rejected, (state) => {
         state.isAuthChecked = false;
         state.requestStatus = RequestStatus.Failed;
       })
       .addCase(checkUserAuth.pending, (state) => {
         state.requestStatus = RequestStatus.Loading;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
-        state.isAuthChecked = true;
-        state.data = action.payload;
-        state.requestStatus = RequestStatus.Success;
-      })
+      .addCase(
+        registerUser.fulfilled,
+        (state, action: PayloadAction<TUser>) => {
+          state.isAuthChecked = true;
+          state.data = action.payload;
+          state.requestStatus = RequestStatus.Success;
+        }
+      )
       .addCase(registerUser.rejected, (state) => {
         state.requestStatus = RequestStatus.Failed;
         state.data = null;
       })
       .addCase(registerUser.pending, (state) => {
-        state.requestStatus = RequestStatus.Failed;
+        state.requestStatus = RequestStatus.Loading;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
+      .addCase(loginUser.fulfilled, (state, action: PayloadAction<TUser>) => {
         state.requestStatus = RequestStatus.Success;
         state.data = action.payload;
         state.isAuthChecked = true;
@@ -136,11 +159,12 @@ export const userSlice = createSlice({
       .addCase(loginUser.pending, (state) => {
         state.requestStatus = RequestStatus.Loading;
       })
-      .addCase(updateUser.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action: PayloadAction<TUser>) => {
         state.isAuthChecked = true;
+        state.data = action.payload;
         state.requestStatus = RequestStatus.Success;
       })
-      .addCase(updateUser.rejected, (state, action) => {
+      .addCase(updateUser.rejected, (state) => {
         state.isAuthChecked = false;
         state.requestStatus = RequestStatus.Failed;
       })
@@ -154,23 +178,16 @@ export const userSlice = createSlice({
       });
   },
   selectors: {
-    selectorisAuthChecked: (state: TUserState) => state.isAuthChecked,
+    getIsAuthChecked: (state: TUserState) => state.isAuthChecked,
     getUser: (state: TUserState) => state.data,
-
-    getName: (state: TUserState) => state.data?.name || '',
-    selectorRequestStatus: (state: TUserState) => state.requestStatus
+    selectorRequestStatus: (state: TUserState) => state.requestStatus,
+    getName: (state: TUserState) => state.data?.name || ''
   }
 });
 
-export const {
-  selectorisAuthChecked,
-  getUser,
-  getName,
-  selectorRequestStatus
-} = userSlice.selectors;
-
+export const { getIsAuthChecked, getUser, selectorRequestStatus, getName } =
+  userSlice.selectors;
 export const { authCheck } = userSlice.actions;
-
 export default userSlice.reducer;
 
 //Из QA 58.55

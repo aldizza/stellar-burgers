@@ -1,3 +1,5 @@
+//Стартер
+
 import { FC } from 'react';
 
 import { Input, Button } from '@zlden/react-developer-burger-ui-components';
@@ -29,6 +31,8 @@ export const ForgotPasswordUI: FC<PageUIProps> = ({
             error={false}
             errorText=''
             size='default'
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
           />
         </div>
         <div className={`pb-6 ${styles.button}`}>

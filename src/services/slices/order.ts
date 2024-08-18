@@ -56,8 +56,6 @@
 
 // export const orderReducer = orderSlice.reducer;
 
-
-
 import { orderBurgerApi } from '@api';
 import { getOrderByNumberApi } from '../../utils/burger-api';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
@@ -87,12 +85,7 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    resetCreateOrder: (state) => {
-      state.info = null; // сбрасываем только `info`, оставляя статус
-    },
-    resetOrderModalData: (state) => {
-      state.info = null; // Сбрасываем значение orderModalData
-    },
+    resetCreateOrder: () => initialState
   },
   extraReducers: (builder) => {
     builder
@@ -112,7 +105,7 @@ export const orderSlice = createSlice({
     selectorModalData: (state) => state.info
   }
 });
-export const { resetCreateOrder, resetOrderModalData } = orderSlice.actions;
+export const { resetCreateOrder } = orderSlice.actions;
 
 export const { selectorOrderStatus, selectorModalData } = orderSlice.selectors;
 

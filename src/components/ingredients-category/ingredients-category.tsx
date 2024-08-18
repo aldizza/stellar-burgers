@@ -40,8 +40,6 @@
 //   );
 // });
 
-
-
 //Мо1 вариант с неработающей модалкой
 // import { forwardRef, useMemo } from 'react';
 // import { TIngredientsCategoryProps } from './type';
@@ -79,9 +77,6 @@
 //     />
 //   );
 // });
-
-
-
 
 //Исправления после видео наставника от 16/08
 import { forwardRef, useMemo } from 'react';

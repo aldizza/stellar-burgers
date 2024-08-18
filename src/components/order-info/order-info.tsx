@@ -97,9 +97,8 @@ export const OrderInfo: FC = () => {
   const number = useParams().number || '';
   const dispatch = useDispatch<AppDispatch>();
   const ingredients = useSelector(selectorIngredientsData);
-  
-  const orderData =  useSelector(selectorModalData);
 
+  const orderData = useSelector(selectorModalData);
 
   // Загрузка данных заказа при монтировании компонента
   //Если заказа в сторе нет, то запрашиваем его

@@ -138,9 +138,6 @@
 
 // export const burgerConstructorReducer = burgerConstructorSlice.reducer;
 
-
-
-
 //Не работает модальное окно
 
 // //добавлено новое состояние orderRequest
@@ -281,16 +278,10 @@
 
 // export const burgerConstructorReducer = burgerConstructorSlice.reducer;
 
-
-
 //Из видео помощи наставника помощь (16 августа)
 
 import { orderBurgerApi } from '../../utils/burger-api';
-import {
-  TIngredient,
-  TConstructorIngredient,
-  TOrder
-} from '../../utils/types';
+import { TIngredient, TConstructorIngredient, TOrder } from '../../utils/types';
 import {
   PayloadAction,
   createAsyncThunk,
@@ -304,7 +295,7 @@ export interface TConstructorState {
     bun: TIngredient | null;
     ingredients: TConstructorIngredient[];
   };
-  orderRequest: boolean; 
+  orderRequest: boolean;
   orderModalData: TOrder | null;
   error: string | null;
   loading: boolean;
@@ -313,17 +304,15 @@ export interface TConstructorState {
 const initialState: TConstructorState = {
   constructorItems: {
     bun: null,
-    ingredients: [],
+    ingredients: []
   },
   orderRequest: false,
   orderModalData: null,
   error: null,
-  loading: false,
+  loading: false
 };
 
-
-
-//У меня не получается использовать эту санку как в твоем видео, потому что возвращаемое значение response из orderBurgerApi не соответствует ожидаемому типу TOrder. 
+//У меня не получается использовать эту санку как в твоем видео, потому что возвращаемое значение response из orderBurgerApi не соответствует ожидаемому типу TOrder.
 
 // export const createOrderBurger = createAsyncThunk<TOrder, string[]>(
 //   'burgerConstructor/orderBurger',
@@ -358,17 +347,18 @@ export const burgerConstructorSlice = createSlice({
         }
       },
       prepare: (ingredient: TConstructorIngredient) => ({
-        payload: { ...ingredient, id: nanoid() },
-      }),
+        payload: { ...ingredient, id: nanoid() }
+      })
     },
-    
+
     removeIngredient: (
       sliceState,
       action: PayloadAction<TConstructorIngredient>
     ) => {
-      sliceState.constructorItems.ingredients = sliceState.constructorItems.ingredients.filter(
-        (item) => item.id !== action.payload.id
-      );
+      sliceState.constructorItems.ingredients =
+        sliceState.constructorItems.ingredients.filter(
+          (item) => item.id !== action.payload.id
+        );
     },
     ingredientMoveUp: (
       sliceState,
@@ -406,16 +396,20 @@ export const burgerConstructorSlice = createSlice({
         );
       }
     },
+    closeOrderModalData: (sliceState) => {
+      sliceState.orderModalData = null;
+    },
     clearConstructor: (sliceState) => {
       sliceState.constructorItems.bun = null;
       sliceState.constructorItems.ingredients = [];
+      // sliceState.orderModalData = null;
     },
     updateConstructor: (
       sliceState,
       action: PayloadAction<TConstructorIngredient[]>
     ) => {
       sliceState.constructorItems.ingredients = action.payload;
-    },
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -440,7 +434,7 @@ export const burgerConstructorSlice = createSlice({
     selectorBurgerIngredients: (sliceState) => sliceState.constructorItems,
     selectorOrderRequest: (sliceState) => sliceState.orderRequest,
     selectorModalData: (sliceState) => sliceState.orderModalData,
-    selectorIsLoading: (sliceState) => sliceState.loading,
+    selectorIsLoading: (sliceState) => sliceState.loading
   }
 });
 
@@ -449,10 +443,10 @@ export const {
   removeIngredient,
   ingredientMoveUp,
   ingredientMoveDown,
+  closeOrderModalData,
   clearConstructor,
-  updateConstructor,
+  updateConstructor
 } = burgerConstructorSlice.actions;
-
 
 export const {
   selectorBurgerIngredients,
@@ -461,8 +455,6 @@ export const {
   selectorIsLoading
 } = burgerConstructorSlice.selectors;
 
-
 export const burgerConstructorReducer = burgerConstructorSlice.reducer;
 
 export const burgerConstructorActions = burgerConstructorSlice.actions;
-

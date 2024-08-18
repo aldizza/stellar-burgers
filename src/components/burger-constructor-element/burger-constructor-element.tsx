@@ -25,8 +25,6 @@
 //   }
 // );
 
-
-
 //Мой вариант с неработающей модалкой
 
 // import { FC, memo } from 'react';
@@ -84,8 +82,6 @@
 //   }
 // );
 
-
-
 //Исправленный вариант после правок слайса конструктора (после видео наставника 16/08)
 import { FC, memo } from 'react';
 import { BurgerConstructorElementUI } from '@ui';
@@ -141,4 +137,3 @@ export const BurgerConstructorElement: FC<BurgerConstructorElementProps> = memo(
     );
   }
 );
-

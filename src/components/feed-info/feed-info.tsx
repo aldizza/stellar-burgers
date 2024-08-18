@@ -31,16 +31,22 @@
 //   );
 // };
 
-import { FC } from 'react';
-
+import { FC, useCallback } from 'react';
+import { useDispatch } from '../../services/store';
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
 import {
   selectorFeedOrders,
   selectorFeedTotal,
-  selectorFeedTotalToday
+  selectorFeedTotalToday,
+  getFeeds
 } from '../../services/slices/feed';
 import { useSelector } from '../../services/store';
+
+//!!!!!!пропс для обновления заказов в ленте
+interface FeedInfoProps {
+  handleGetFeeds: () => void;
+}
 
 const getOrders = (orders: TOrder[], status: string): number[] =>
   orders
@@ -56,6 +62,12 @@ export const FeedInfo: FC = () => {
   const readyOrders = getOrders(orders, 'done');
 
   const pendingOrders = getOrders(orders, 'pending');
+  const dispatch = useDispatch();
+
+  // Функция для обновления ленты заказов
+  const handleGetFeeds = () => {
+    dispatch(getFeeds());
+  };
 
   return (
     <FeedInfoUI
@@ -65,6 +77,7 @@ export const FeedInfo: FC = () => {
         total: totalFeeds,
         totalToday: totalToday
       }}
+      // handleGetFeeds={handleGetFeeds}
     />
   );
 };
