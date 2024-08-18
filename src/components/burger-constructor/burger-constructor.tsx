@@ -13,9 +13,7 @@ import {
   selectorOrderStatus,
   resetCreateOrder
 } from '../../services/slices/order';
-import {
-  selectorModalData
-} from '../../services/slices/burgerConstructor';
+import { selectorModalData } from '../../services/slices/burgerConstructor';
 import { getIsAuthChecked } from '../../services/slices/user';
 
 export const BurgerConstructor: FC = () => {
