@@ -1,5 +1,3 @@
-//Полностью готов
-
 import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ProfileMenuUI } from '@ui';

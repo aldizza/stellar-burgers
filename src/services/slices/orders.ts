@@ -1,13 +1,9 @@
-//Готов
-//Заказы на странице профиля
-
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 import { RequestStatus } from '../../utils/types';
 import { getOrdersApi } from '../../utils/burger-api';
 
 export type TOrderState = {
-  //детальная информация о заказе (данные через запрос по номеру заказа из урла)
   orders: TOrder[];
   status: RequestStatus;
 };
@@ -17,7 +13,6 @@ export const initialState: TOrderState = {
   status: RequestStatus.Idle
 };
 
-// Асинхронная Thunk-функция для получения списка заказов
 export const getOrders = createAsyncThunk('orders/getOrders', getOrdersApi);
 
 export const ordersSlice = createSlice({

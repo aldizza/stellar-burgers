@@ -1,4 +1,3 @@
-//Полностью готова
 import React, { FC } from 'react';
 import styles from './app-header.module.css';
 import { TAppHeaderUIProps } from './type';

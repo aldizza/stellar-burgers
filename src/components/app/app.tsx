@@ -39,9 +39,7 @@ import {
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../services/slices/ingredients';
-import { getUser, selectorRequestStatus } from '../../services/slices/user';
 import { getCookie } from '../../utils/cookie';
-import { getIsAuthChecked, authCheck } from '../../services/slices/user';
 import { ProtectedRoute } from '../../components/protected-route';
 
 const App = () => {
@@ -49,7 +47,6 @@ const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const background = location.state?.background;
-  const token = getCookie('accessToken');
 
   useEffect(() => {
     dispatch(getIngredients());

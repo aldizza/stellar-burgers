@@ -9,10 +9,9 @@ import {
   getUserApi,
   updateUserApi,
   logoutApi,
-  TAuthResponse,
   TUserResponse
 } from '../../utils/burger-api';
-import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
+import { setCookie, deleteCookie } from '../../utils/cookie';
 
 // Тип состояния пользователя (QA)
 type TUserState = {
@@ -102,10 +101,6 @@ export const updateUser = createAsyncThunk(
     }
   }
 );
-
-//В QA только 2
-// state.data = action.payload.user;
-// state.requestStatus = RequestStatus.Success;
 
 // Создание слайса пользователя
 export const userSlice = createSlice({

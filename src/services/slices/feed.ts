@@ -1,5 +1,3 @@
-//Готов, спросить у наставника про санку (нужно ли очистить текущие данные или выполнить какую-то другую подготовку перед запросом)
-
 import { RequestStatus } from '../../utils/types';
 import { TOrder } from '@utils-types';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
@@ -19,16 +17,7 @@ export const initialState: IFeedState = {
   status: RequestStatus.Idle
 };
 
-// санка для получения заказов
 export const getFeeds = createAsyncThunk('order/feeds', getFeedsApi);
-
-//   export const getFeeds = createAsyncThunk<TOrdersData>(
-//     'order/feed',
-//     async (_, { dispatch }) => {
-//       dispatch(clearFeed());
-//       return await getFeedsApi();
-//     }
-//   );
 
 export const feedSlice = createSlice({
   name: 'feeds',

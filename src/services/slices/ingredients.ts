@@ -1,4 +1,3 @@
-//Готов
 import { getIngredientsApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TIngredient } from '@utils-types';
@@ -30,7 +29,7 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(getIngredients.fulfilled, (state, action) => {
         state.status = RequestStatus.Success;
-        state.ingredients = action.payload; // Изменение состояния должно быть правильным
+        state.ingredients = action.payload;
       })
       .addCase(getIngredients.rejected, (state) => {
         state.status = RequestStatus.Failed;
