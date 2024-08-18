@@ -2,8 +2,7 @@ import { FC, useMemo, useEffect } from 'react';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, AppDispatch } from '../../services/store';
+import { useSelector, useDispatch } from '../../services/store';
 import { useParams } from 'react-router-dom';
 import {
   getOrderByNumber,
@@ -14,7 +13,7 @@ import { selectorIngredientsData } from '../../services/slices/ingredients';
 //C QA
 export const OrderInfo: FC = () => {
   const number = useParams().number || '';
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const ingredients = useSelector(selectorIngredientsData);
 
   const orderData = useSelector(selectorModalData);
