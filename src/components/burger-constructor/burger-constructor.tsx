@@ -147,11 +147,12 @@ import { RootState } from '../../services/store';
 import { getUser } from '../../services/slices/user';
 import { getCookie } from '../../utils/cookie';
 import { useEffect } from 'react';
+import { getIsAuthChecked } from '../../services/slices/user';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.user);
+  const isAuth = useSelector(getIsAuthChecked);
   const constructorItems = useSelector(selectorBurgerIngredients);
   const orderRequest =
     useSelector(selectorOrderStatus) === RequestStatus.Loading;
@@ -159,7 +160,7 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-    if (!user) {
+    if (!isAuth) {
       navigate('/login');
     } else {
       const ingredientIds = [
