@@ -1,1 +1,1 @@
-export { ProtectedRoute } from './protected-route.tsx';
+export { ProtectedRoute } from './protected-route';
