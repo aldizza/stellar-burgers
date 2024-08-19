@@ -16,7 +16,7 @@ import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../services/slices/ingredients';
-import { ProtectedRoute } from '../../components/protected-route';
+import { ProtectedRoute } from '../protected-route';
 import { checkUserAuth } from '../../services/slices/user';
 
 const App = () => {
