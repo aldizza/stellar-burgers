@@ -7,7 +7,7 @@ import {
   nanoid
 } from '@reduxjs/toolkit';
 
-export interface TConstructorState {
+export interface IConstructorState {
   constructorItems: {
     bun: TIngredient | null;
     ingredients: TConstructorIngredient[];
@@ -18,7 +18,7 @@ export interface TConstructorState {
   loading: boolean;
 }
 
-const initialState: TConstructorState = {
+const initialState: IConstructorState = {
   constructorItems: {
     bun: null,
     ingredients: []
@@ -29,6 +29,7 @@ const initialState: TConstructorState = {
   loading: false
 };
 
+//Для удобного создания асинхронных экшенов есть функция createAsyncThunk
 export const createOrderBurger = createAsyncThunk<TOrder, string[]>(
   'burgerConstructor/orderBurger',
   async (ingredientsId) => (await orderBurgerApi(ingredientsId)).order
