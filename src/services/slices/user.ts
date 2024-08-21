@@ -107,8 +107,8 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    authCheck(state, action: PayloadAction<boolean>) {
-      state.isAuthChecked = action.payload;
+    authCheck(state) {
+      state.isAuthChecked = true;
     }
   },
   extraReducers: (builder) => {
@@ -170,7 +170,6 @@ export const userSlice = createSlice({
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.data = null;
-        state.isAuthChecked = false;
         state.requestStatus = RequestStatus.Idle;
       });
   },

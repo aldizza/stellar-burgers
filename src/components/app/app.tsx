@@ -17,18 +17,27 @@ import { useDispatch } from '../../services/store';
 import { useEffect } from 'react';
 import { getIngredients } from '../../services/slices/ingredients';
 import { ProtectedRoute } from '../protected-route';
-import { checkUserAuth } from '../../services/slices/user';
+import { authCheck, checkUserAuth } from '../../services/slices/user';
+import { getCookie } from '../../utils/cookie';
 
 const App = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const background = location.state?.background;
+  const token = getCookie('accessToken');
 
   useEffect(() => {
     dispatch(getIngredients());
-    dispatch(checkUserAuth());
-  }, [dispatch]);
+    if (token) {
+      dispatch(checkUserAuth())
+        .unwrap()
+        .catch((err) => console.log(err))
+        .finally(() => dispatch(authCheck()));
+    } else {
+      dispatch(authCheck());
+    }
+  }, [dispatch, token]);
 
   return (
     <div className={styles.app}>
