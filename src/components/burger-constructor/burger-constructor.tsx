@@ -1,24 +1,48 @@
 import { FC, useMemo } from 'react';
-import { TConstructorIngredient } from '@utils-types';
+import { RequestStatus, TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
+import { useDispatch, useSelector } from '../../services/store';
+import { useNavigate } from 'react-router-dom';
+import {
+  clearConstructor,
+  createOrderBurger,
+  selectorBurgerIngredients,
+  closeOrderModalData
+} from '../../services/slices/burgerConstructor';
+import {
+  selectorOrderStatus,
+  resetCreateOrder
+} from '../../services/slices/order';
+import { selectorModalData } from '../../services/slices/burgerConstructor';
+import { getIsAuthChecked } from '../../services/slices/user';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
-  };
-
-  const orderRequest = false;
-
-  const orderModalData = null;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const isAuth = useSelector(getIsAuthChecked);
+  const constructorItems = useSelector(selectorBurgerIngredients);
+  const orderRequest =
+    useSelector(selectorOrderStatus) === RequestStatus.Loading;
+  const orderModalData = useSelector(selectorModalData);
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
+    if (!isAuth) {
+      navigate('/login');
+    } else {
+      const ingredientIds = [
+        constructorItems.bun._id,
+        ...constructorItems.ingredients.map((item) => item._id)
+      ];
+      dispatch(createOrderBurger(ingredientIds));
+    }
   };
-  const closeOrderModal = () => {};
+
+  const closeOrderModal = () => {
+    dispatch(resetCreateOrder());
+    dispatch(clearConstructor());
+    dispatch(closeOrderModalData());
+  };
 
   const price = useMemo(
     () =>
@@ -29,8 +53,6 @@ export const BurgerConstructor: FC = () => {
       ),
     [constructorItems]
   );
-
-  return null;
 
   return (
     <BurgerConstructorUI

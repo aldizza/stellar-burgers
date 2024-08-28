@@ -1,1 +1,3 @@
-export { Preloader } from './preloader';
+// export { Preloader } from './preloader';
+import Preloader from './preloader';
+export { Preloader };
