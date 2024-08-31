@@ -1,4 +1,4 @@
-import { FC, useMemo, useEffect } from 'react';
+import { FC, useMemo } from 'react';
 import { RequestStatus, TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
@@ -14,12 +14,13 @@ import {
   resetCreateOrder
 } from '../../services/slices/order';
 import { selectorModalData } from '../../services/slices/burgerConstructor';
-import { getIsAuthChecked } from '../../services/slices/user';
+import { getUser } from '../../services/slices/user';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuth = useSelector(getIsAuthChecked);
+  const user = useSelector(getUser);
+
   const constructorItems = useSelector(selectorBurgerIngredients);
   const orderRequest =
     useSelector(selectorOrderStatus) === RequestStatus.Loading;
@@ -27,7 +28,7 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-    if (!isAuth) {
+    if (!user) {
       navigate('/login');
     } else {
       const ingredientIds = [
@@ -37,7 +38,7 @@ export const BurgerConstructor: FC = () => {
       dispatch(createOrderBurger(ingredientIds));
     }
   };
-  
+
   const closeOrderModal = () => {
     dispatch(resetCreateOrder());
     dispatch(clearConstructor());
