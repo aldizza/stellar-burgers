@@ -14,12 +14,13 @@ import {
   resetCreateOrder
 } from '../../services/slices/order';
 import { selectorModalData } from '../../services/slices/burgerConstructor';
-import { getIsAuthChecked } from '../../services/slices/user';
+import { getUser } from '../../services/slices/user';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const isAuth = useSelector(getIsAuthChecked);
+  const user = useSelector(getUser);
+
   const constructorItems = useSelector(selectorBurgerIngredients);
   const orderRequest =
     useSelector(selectorOrderStatus) === RequestStatus.Loading;
@@ -27,7 +28,7 @@ export const BurgerConstructor: FC = () => {
 
   const onOrderClick = () => {
     if (!constructorItems.bun || orderRequest) return;
-    if (!isAuth) {
+    if (!user) {
       navigate('/login');
     } else {
       const ingredientIds = [

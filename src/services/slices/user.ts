@@ -1,7 +1,5 @@
-//Не уверена насчет санок, уточнить у наставника
-
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TUser, RequestStatus } from '@utils-types';
+import { TUser, RequestStatus } from '../../utils/types';
 import { TRegisterData, TLoginData } from '../../utils/burger-api';
 import {
   registerUserApi,
@@ -183,6 +181,7 @@ export const userSlice = createSlice({
 
 export const { getIsAuthChecked, getUser, selectorRequestStatus, getName } =
   userSlice.selectors;
+
 export const { authCheck } = userSlice.actions;
 export default userSlice.reducer;
 export const userReducer = userSlice.reducer;

@@ -15,7 +15,6 @@ export const Feed: FC = () => {
   }, []);
 
   if (!orders.length) {
-    // return null;
     return <Preloader />;
   }
 

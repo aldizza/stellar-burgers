@@ -1,7 +1,7 @@
 import { RequestStatus } from '../../utils/types';
 import { TOrder } from '@utils-types';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getFeedsApi } from '@api';
+import { getFeedsApi } from '../../utils/burger-api';
 
 export interface IFeedState {
   orders: Array<TOrder>;
