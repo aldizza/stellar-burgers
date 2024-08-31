@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { RequestStatus, TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
@@ -37,7 +37,7 @@ export const BurgerConstructor: FC = () => {
       dispatch(createOrderBurger(ingredientIds));
     }
   };
-
+  
   const closeOrderModal = () => {
     dispatch(resetCreateOrder());
     dispatch(clearConstructor());

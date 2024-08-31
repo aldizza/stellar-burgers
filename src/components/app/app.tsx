@@ -27,14 +27,19 @@ const App = () => {
   const background = location.state?.background;
   const token = getCookie('accessToken');
 
+  //useEffect загружает ингредиенты при монтировании компонента.
+  // Если токен существует, проверяется аутентификация пользователя
   useEffect(() => {
     dispatch(getIngredients());
     if (token) {
       dispatch(checkUserAuth())
         .unwrap()
+        //ловит любую ошибку, которая может возникнуть при выполнении checkUserAuth, и выводит её в консоль.
         .catch((err) => console.log(err))
+        //обновляет состояния аутентификации
         .finally(() => dispatch(authCheck()));
     } else {
+      //Если token не существует, сразу отправляется экшен authCheck
       dispatch(authCheck());
     }
   }, [dispatch, token]);
