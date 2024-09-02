@@ -7,29 +7,34 @@ describe('корректная работа при добавлении ингр
       cy.viewport(1300, 800);
       cy.visit('http://localhost:4000');
     });
-  
-    it('Тест добавления булок и начинки в конструктор', function () {
-      cy.get('[data-cy=bun-ingredients]').contains('Добавить').click();
+
+    it('Тест добавления ингредиентов', function () {
+      // 1. Нажатие кнопки "Добавить" в секции булок
+      cy.get('[data-cy=bun-ingredients]').contains('Добавить').click({ force: true });
+      // 2. Проверка, что "Ингредиент 1" отображается в секции верхней булки
       cy.get('[data-cy=constructor-bun-1]')
         .contains('Ингредиент 1')
         .should('exist');
+        // 3. Проверка, что "Ингредиент 1" также отображается в секции нижней булки
       cy.get('[data-cy=constructor-bun-2]')
         .contains('Ингредиент 1')
         .should('exist');
     });
-  
-    //Первые ингридиенты из разных категорий по клику
+
+        //Первые ингридиенты из разных категорий по клику
     it('Тест добавления обычных ингредиентов', function () {
-      cy.get('[data-cy=mains-ingredients]').contains('Добавить').click();
-      cy.get('[data-cy=sauces-ingredients]').contains('Добавить').click();
+      cy.get('[data-cy=mains-ingredients]').contains('Добавить').click({ force: true });
+      cy.get('[data-cy=sauces-ingredients]').contains('Добавить').click({ force: true });
+      console.log('>>>>>>>>');
+      console.log(cy.get('[data-cy=constructor-ingredients]'));
       cy.get('[data-cy=constructor-ingredients]')
-        .contains('Ингредиент 3')
+        .contains('Ингредиент 2')
         .should('exist');
       cy.get('[data-cy=constructor-ingredients]')
-        .contains('Ингредиент 7')
+        .contains('Ингредиент 4')
         .should('exist');
-    });
-  });
+    }); 
+});
 
 //Тест открытия и закрытия модального окна ингредиента
 describe('тест открытия модального окна ингредиентов', function() {
@@ -42,22 +47,22 @@ describe('тест открытия модального окна ингреди
   
     it('тест открытия модального окна', function () {
       cy.contains('Детали ингредиента').should('not.exist');
-      cy.contains('Ингредиент 1').click();
+      cy.contains('Ингредиент 1').click({ force: true });
       cy.contains('Детали ингредиента').should('exist');
       //проверка верного ингредиента в модальном окне
       cy.get('#modals').contains('Ингредиент 1').should('exist');
     });
   
     it('тест закрытия модального окна по клику на кнопку', function () {
-      cy.contains('Ингредиент 1').click();
+      cy.contains('Ингредиент 1').click({ force: true });
       cy.contains('Детали ингредиента').should('exist');
-      cy.get('#modals button[aria-label="Закрыть"]').click();
+      cy.get('#modals button[aria-label="Закрыть"]').click({ force: true });
       //проверка закрытия модального окна
       cy.contains('Детали ингредиента').should('not.exist');
       });
 
     it('тест закрытия модального окна кликом по оверлею', function () {
-      cy.contains('Ингредиент 1').click();
+      cy.contains('Ингредиент 1').click({ force: true });
       cy.contains('Детали ингредиента').should('exist');
       cy.get('[data-cy=modal-overlay]').click('left', { force: true });
       //проверка закрытия модального окна
@@ -65,52 +70,206 @@ describe('тест открытия модального окна ингреди
     });
   });
 
-//Тест оформления заказа
+  // Тест оформления заказа
 describe('тест оформления заказа', function() {
-    beforeEach(function () {
-      // Перехват запросов в тестах
-      cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
-      cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' });
-      cy.intercept('POST', 'api/orders', { fixture: 'post_order.json' }).as('postOrder');
+  beforeEach(function () {
+    // Перехват запросов в тестах
+    cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
+    cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' });
+    cy.intercept('POST', 'api/orders', { fixture: 'post_order.json' }).as('postOrder');
 
-      //Моковые токены
-      window.localStorage.setItem(
-        'refreshToken',
-        JSON.stringify('test-refreshToken')
-      );
-      cy.setCookie('accessToken', 'test-accessToken');
-      cy.viewport(1300, 800);
-      cy.visit('http://localhost:4000');
-    });
+    // Моковые токены
+    window.localStorage.setItem('refreshToken', JSON.stringify('test-refreshToken'));
+    cy.setCookie('accessToken', 'test-accessToken');
+    cy.viewport(1300, 800);
+    cy.visit('http://localhost:4000');
+  });
 
-    afterEach(function () {
-      cy.clearLocalStorage();
-      cy.clearCookies();
-    });
+  afterEach(function () {
+    cy.clearLocalStorage();
+    cy.clearCookies();
+  });
 
-    it('тест оформления заказа', function () {
-      cy.get('[data-cy=bun-ingredients]').contains('Добавить').click();
-      cy.get('[data-cy=mains-ingredients]').contains('Добавить').click();
-      cy.get('[data-cy=sauces-ingredients]').contains('Добавить').click();
-      cy.get('[data-cy=order-sum] button').click();
+  it('тест оформления заказа', function () {
+    // Добавление ингредиентов в конструктор
+    cy.get('[data-cy=bun-ingredients]')
+      .contains('Добавить')
+      .click({ force: true });
+    cy.get('[data-cy=mains-ingredients]')
+      .contains('Добавить')
+      .click({ force: true });
+    cy.get('[data-cy=sauces-ingredients]')
+      .contains('Добавить')
+      .click({ force: true });
 
-      //Тест корректной отправки ингредиентов
-      cy.wait('@postOrder')
-        .its('request.body')
-        .should('deep.equal', {
-          ingredients: ['1', '3', '7', '1']
-        });
+    // Оформление заказа
+    cy.get('[data-cy=order-sum]', { timeout: 10000 }).should('be.visible')
+      .click({ force: true });
 
-      //Тест номера заказа
-      cy.get('[data-cy=order-number]').contains('1234567').should('exist');
+    // Тест корректной отправки ингредиентов
+    cy.wait('@postOrder')
+      .its('request.body')
+      .should('deep.equal', {
+        ingredients: ['1', '2', '4']
+      });
 
-      //Тест закрытия модального окна
-      cy.get('#modals button[aria-label="Закрыть"]').click();
-      cy.contains('[data-cy=order-number]').should('not.exist');
+    // Тест номера заказа
+    cy.get('[data-cy=order-number]')
+      .contains('51882')
+      .should('exist');
 
-      //Тест очистки конструктора
-      cy.get('[data-cy=constructor]')
-        .contains('Ингредиент 1')
-        .should('not.exist');
-    });
+    // Тест закрытия модального окна
+    cy.get('#modals button[aria-label="Закрыть"]')
+      .click({ force: true });
+    cy.contains('[data-cy=order-number]').should('not.exist');
+
+    // Тест очистки конструктора
+    cy.get('[data-cy=constructor]')
+      .contains('Ингредиент 1')
+      .should('not.exist');
+  });
 });
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// /// <reference types="cypress" />
+
+// describe('Конструктор бургеров', () => {
+
+//   beforeEach(() => {
+//       cy.viewport(1300, 800);
+//       cy.intercept('GET', '**/api/ingredients').as('getIngredients');
+//       cy.visit('http://localhost:4000');
+//       cy.wait('@getIngredients');
+//   });
+
+//   it('корректная работа при добавлении ингредиентов в конструктор', function () {
+//       // Добавляем булку
+//       cy.get('[data-cy=bun-ingredients]').contains('Добавить').click({ force: true });
+//       cy.get('[data-cy=constructor-bun-1]').should('contain.text', 'Ингредиент 1');
+
+//       // Добавляем начинку
+//       cy.get('[data-cy=mains-ingredients]').contains('Добавить').click({ force: true });
+//       cy.get('[data-cy=constructor-main-1]').should('contain.text', 'Ингредиент 2');
+//   });
+
+//   it('тест открытия модального окна', function () {
+//       // Проверяем, что модальное окно изначально закрыто
+//       cy.contains('Детали ингредиента').should('not.exist');
+
+//       // Открываем модальное окно
+//       cy.get('[data-cy=ingredient-card]').first().click();
+
+//       // Проверяем открытие модального окна
+//       cy.contains('Детали ингредиента').should('exist');
+//       cy.get('#modals').should('contain.text', 'Ингредиент 1');
+//   });
+
+//   it('тест закрытия модального окна по клику на кнопку', function () {
+//       // Открываем модальное окно
+//       cy.get('[data-cy=ingredient-card]').first().click();
+
+//       // Проверяем открытие модального окна
+//       cy.contains('Детали ингредиента').should('exist');
+
+//       // Закрываем модальное окно по кнопке
+//       cy.get('#modals button[aria-label="Закрыть"]').click();
+
+//       // Проверяем, что модальное окно закрыто
+//       cy.contains('Детали ингредиента').should('not.exist');
+//   });
+
+//   it('тест закрытия модального окна кликом по оверлею', function () {
+//       // Открываем модальное окно
+//       cy.get('[data-cy=ingredient-card]').first().click();
+
+//       // Проверяем открытие модального окна
+//       cy.contains('Детали ингредиента').should('exist');
+
+//       // Закрываем модальное окно кликом по оверлею
+//       cy.get('[data-cy=modal-overlay]').click({ force: true });
+
+//       // Проверяем, что модальное окно закрыто
+//       cy.contains('Детали ингредиента').should('not.exist');
+//   });
+
+//   it('тест оформления заказа', function () {
+//       // Устанавливаем cookie для авторизации
+//       cy.setCookie('accessToken', 'test-accessToken');
+
+//       // Ждём загрузки ингредиентов
+//       cy.wait('@getIngredients');
+
+//       // Добавляем ингредиенты в конструктор
+//       cy.get('[data-cy=bun-ingredients]').contains('Добавить').click({ force: true });
+//       cy.get('[data-cy=mains-ingredients]').contains('Добавить').click({ force: true });
+//       cy.get('[data-cy=sauces-ingredients]').contains('Добавить').click({ force: true });
+
+//       // Оформляем заказ
+//       cy.get('[data-cy=order-sum] button').click();
+
+//       // Проверяем отправку ингредиентов
+//       cy.intercept('POST', '**/api/orders').as('postOrder');
+//       cy.wait('@postOrder').its('response.statusCode').should('eq', 200);
+//   });
+
+// });

@@ -1,7 +1,7 @@
 {
     "success": true,
     "user": {
-      "email": "aldizza@yandex.ru",
-      "name": "Наталья"
+      "email": "test@example.com",
+      "name": "Test User"
     }
   }

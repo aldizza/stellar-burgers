@@ -16,7 +16,10 @@ const config: JestConfigWithTsJest = {
               // настройки для ts-jest
             },
           ],
-        }
+        },
+        moduleNameMapper: {
+          '^@utils-types$': '<rootDir>/src/utils/types.ts'
+        },
 };
 
 export default config;

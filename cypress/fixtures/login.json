@@ -2,5 +2,5 @@
     "success": true,
     "accessToken": "Token fake",
     "refreshToken": "fake",
-    "user": { "email": "aldizza@yandex.ru", "name": "aldizza"}
+    "user": { "email": "test@example.com", "name": "Test User"}
 }
